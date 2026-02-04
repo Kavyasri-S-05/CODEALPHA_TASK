@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language Learning App | Master 16 Languages</title>
+    <style>
+:root{
+--primary:#4CAF50;
+--primary-dark:#388E3C;
+--secondary:#2196F3;
+--success:#4CAF50;
+--warning:#FF9800;
+--danger:#F44336;
+--bg:#f5f5f5;
+--surface:#ffffff;
+--text:#212121;
+--text-light:#757575;
+--border:#e0e0e0;
+--shadow:0 2px 8px rgba(0,0,0,0.1);
+--shadow-hover:0 4px 16px rgba(0,0,0,0.15);
+--radius:12px;
+--transition:.3s ease;
+}
+
+body.dark{
+--bg:#121212;
+--surface:#1e1e1e;
+--text:#ffffff;
+--text-light:#b0b0b0;
+--border:#333333;
+--shadow:0 2px 8px rgba(0,0,0,0.3);
+--shadow-hover:0 4px 16px rgba(0,0,0,0.4);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+font-family:'Segoe UI',sans-serif;
+background:var(--bg);
+color:var(--text);
+transition:.3s;
+}
+
+.navbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:1rem 2rem;
+border-bottom:2px solid var(--border);
+background:var(--bg);
+position:sticky;
+top:0;
+}
+
+.stats-bar{display:flex;gap:20px;font-weight:bold;}
+.xp-count{color:#ff9600;}
+.streak-count{color:#ff4b4b;}
+
+.container{
+max-width:1200px;
+margin:auto;
+padding:20px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+gap:15px;
+}
+
+.card{
+background:var(--surface);
+border:2px solid var(--border);
+border-radius:16px;
+padding:16px;
+text-align:center;
+cursor:pointer;
+transition:.25s;
+}
+
+.card:hover{
+transform:translateY(-5px);
+border-color:var(--secondary);
+background:rgba(28,176,246,.08);
+}
+
+.page{display:none;}
+.page.active{display:block;animation:fade .4s;}
+
+.hidden{display:none;}
+
+@keyframes fade{
+from{opacity:0;transform:translateY(10px)}
+to{opacity:1;transform:translateY(0)}
+}
+
+.btn{
+background:var(--primary);
+color:white;
+border:none;
+padding:12px 26px;
+border-radius:14px;
+font-weight:600;
+cursor:pointer;
+transition:.25s;
+}
+
+.btn:hover{background:var(--primary-dark);transform:scale(1.05);}
+.btn-secondary{background:var(--secondary);}
+.btn-warning{background:var(--warning);}
+.btn-success{background:var(--success);}
+
+.level-btn:disabled{opacity:0.5;cursor:not-allowed;}
+
+/* LESSON UI */
+
+.lesson-wrapper{
+min-height:75vh;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+gap:22px;
+}
+
+.flash-box{
+background:var(--surface);
+border:3px solid var(--border);
+border-radius:22px;
+padding:55px 40px;
+width:90%;
+max-width:520px;
+text-align:center;
+font-size:34px;
+color:var(--secondary);
+box-shadow:0 12px 35px rgba(0,0,0,.15);
+}
+
+/* Flip Card Styles */
+.flash-card {
+  background-color: transparent;
+  width: 90%;
+  max-width: 520px;
+  height: 200px;
+  perspective: 1000px;
+  cursor: pointer;
+  margin: 0 auto;
+}
+
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.flash-card.flipped .card-inner {
+  transform: rotateY(180deg);
+}
+
+.card-front, .card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  border-radius: 22px;
+  padding: 55px 40px;
+  font-size: 34px;
+  color: var(--secondary);
+  box-shadow: 0 12px 35px rgba(0,0,0,.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-front {
+  background: var(--surface);
+  border: 3px solid var(--border);
+}
+
+.card-back {
+  background: var(--surface);
+  border: 3px solid var(--primary);
+  transform: rotateY(180deg);
+}
+
+.lesson-controls{
+display:flex;
+gap:20px;
+width: 100%;
+max-width: fit-content;
+
+}
+
+.listen-btn{background:var(--secondary);color:white;}
+.next-btn{background:var(--primary);color:white;}
+
+/* QUIZ */
+
+.quiz-question{
+    padding:60px 70px;
+    margin:60px auto;
+    max-width:900px;
+    border-radius:22px;
+}
+
+.quiz-options{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:30px;
+    margin-bottom:50px;
+}
+
+.option-btn{
+    padding:25px;
+    border-radius:16px;
+    font-size:1.05rem;
+}
+
+.correct{
+background:#d7ffb8!important;
+border-color:var(--success);
+color:#2e7d32;
+}
+
+.wrong{
+background:#ffdfe0!important;
+border-color:var(--danger);
+color:#c62828;
+}
+
+#nextQuizBtn{
+    margin-top:20px;
+    padding:16px;
+    border-radius:18px;
+    font-size:1.05rem;
+}
+
+.back-btn{
+    margin:25px 0;
+}
+
+/* PROGRESS */
+
+.progress-bar{
+width:90%;
+max-width:600px;
+height:12px;
+background:var(--border);
+border-radius:10px;
+overflow:hidden;
+}
+
+.progress-fill{
+height:100%;
+width:0%;
+background:var(--primary);
+transition:.4s;
+}
+
+/* XP BAR */
+
+.xp-bar{
+width:100%;
+height:8px;
+background:var(--border);
+}
+
+.xp-fill{
+height:100%;
+width:0%;
+background:linear-gradient(90deg,#58cc02,#1cb0f6);
+transition:.4s;
+}
+
+/* STATS */
+
+.stats{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+gap:15px;
+}
+
+.stat-card{
+background:var(--surface);
+padding:22px;
+border-radius:16px;
+text-align:center;
+box-shadow:0 6px 20px rgba(0,0,0,.08);
+}
+
+.stat-card .number{
+font-size:34px;
+color:var(--primary);
+font-weight:700;
+}
+
+@media(max-width:768px){
+.flash-box{font-size:26px;padding:45px 25px;}
+.lesson-controls{flex-direction:column;width:100%;}
+.lesson-controls button{width:100%;}
+}
+</style>
+
+</head>
+<body>
+
+<nav class="navbar">
+<div style="font-size:1.5rem;font-weight:bold;color:var(--primary)">🌍 Language Learning App</div>
+<div class="stats-bar">
+<span class="streak-count">🔥 <span id="streak">0</span></span>
+<span class="xp-count">💎 <span id="xp">0</span></span>
+<button onclick="toggleDark()" style="background:none;border:none;font-size:1.2rem;cursor:pointer">🌓</button>
+</div>
+</nav>
+
+<div class="xp-bar"><div class="xp-fill" id="xpFill"></div></div>
+
+<div class="container">
+
+<div id="homePage" class="page active">
+<h2 style="text-align:center;margin:20px 0">Select a Language</h2>
+<div class="grid" id="languageGrid"></div>
+<div style="text-align:center;margin-top:20px">
+<button class="btn btn-warning" onclick="showStatus()">📊 View Status</button>
+</div>
+</div>
+
+<div id="learningPage" class="page">
+<button class="btn btn-secondary" onclick="goHome()">← Back</button>
+<h2 id="learningTitle" style="text-align:center;margin:20px 0"></h2>
+
+<div style="text-align:center;margin:20px 0">
+<button class="btn level-btn" onclick="startLesson(1)">Level 1</button>
+<button class="btn level-btn" onclick="startLesson(2)">Level 2</button>
+<button class="btn level-btn" onclick="startLesson(3)">Level 3</button>
+</div>
+
+<div class="lesson-wrapper">
+
+<div class="progress-bar">
+<div class="progress-fill" id="progressFill"></div>
+</div>
+
+<div class="flash-card" id="flashCard" onclick="flipCard()">
+  <div class="card-inner">
+    <div class="card-front" id="cardFront">Word here</div>
+    <div class="card-back" id="cardBack">Meaning here</div>
+  </div>
+</div>
+
+<div class="lesson-controls">
+<button class="listen-btn" onclick="speakText()"> 🔊 Listen </button>
+<button class="next-btn" onclick="nextCard()"> Got it → </button>
+</div>
+
+<button class="btn" onclick="startQuizMode()">📝 Take Quiz</button>
+<p id="progressText"></p>
+
+</div>
+</div>
+
+<div id="quizPage" class="page">
+<button class="btn btn-secondary" onclick="goHome()">← Back</button>
+<h2 id="quizTitle" style="text-align:center;margin:20px 0"></h2>
+
+<div class="progress-bar">
+<div class="progress-fill" id="quizProgressFill"></div>
+</div>
+
+<p id="quizProgressText" style="text-align:center;margin-bottom:15px"></p>
+
+<div class="quiz-question">
+<h3 id="quizQuestion"></h3>
+<div class="quiz-options" id="quizOptions"></div>
+<button class="btn" id="nextQuizBtn" onclick="nextQuizQuestion()" style="display:none;width:100%">Next →</button>
+</div>
+</div>
+
+<div id="resultsPage" class="page">
+<button class="btn btn-secondary" onclick="goHome()">← Back</button>
+<div class="result-screen">
+<h2>🎉 Quiz Complete!</h2>
+<p id="resultLanguage"></p>
+<div class="score" id="resultScore"></div>
+<p id="resultMessage"></p>
+<div style="margin-top:20px">
+<button class="btn" onclick="retakeQuiz()">Retake</button>
+<button class="btn btn-secondary" onclick="goHome()">Home</button>
+</div>
+</div>
+</div>
+
+<div id="statsPage" class="page">
+<button class="btn btn-secondary" onclick="goHome()">← Back</button>
+<h2 style="text-align:center;margin:20px 0">📊 Your Progress</h2>
+
+<div class="stats">
+<div class="stat-card"><h4>Languages</h4><div class="number" id="statsLanguages">0</div></div>
+<div class="stat-card"><h4>Words</h4><div class="number" id="statsWords">0</div></div>
+<div class="stat-card"><h4>Quizzes</h4><div class="number" id="statsQuizzes">0</div></div>
+<div class="stat-card"><h4>Average</h4><div class="number" id="statsAverage">0%</div></div>
+</div>
+
+<div style="text-align:center;margin-top:30px">
+<button class="btn btn-warning" onclick="resetProgress()">Reset</button>
+</div>
+</div>
+
+</div>
+
+</body>
+
+
+<script>
+    // --- DATASET ---
+    const langData = {
+        Spanish: {
+            code: 'es',
+            level1: [["Hola", "Hello"], ["Gracias", "Thank you"], ["Agua", "Water"], ["Amigo", "Friend"], ["Comida", "Food"], ["Por favor", "Please"], ["Adiós", "Goodbye"], ["Sí", "Yes"], ["No", "No"], ["Escuela", "School"], ["Trabajo", "Work"], ["Amor", "Love"], ["Feliz", "Happy"], ["Triste", "Sad"], ["Bueno", "Good"], ["Malo", "Bad"], ["Mañana", "Morning"], ["Noche", "Night"], ["Casa", "House"], ["Ciudad", "City"], ["Libro", "Book"], ["Música", "Music"], ["Tiempo", "Time"], ["Dinero", "Money"], ["Niño", "Child"], ["Maestro", "Teacher"], ["Mercado", "Market"], ["Beber", "Drink"], ["Comer", "Eat"], ["Caminar", "Walk"], ["Ver", "See"], ["Hablar", "Speak"], ["Aprender", "Learn"], ["Leer", "Read"], ["Escribir", "Write"], ["Grande", "Big"], ["Pequeño", "Small"], ["Rápido", "Fast"], ["Lento", "Slow"], ["Perro", "Dog"], ["Gato", "Cat"], ["Sol", "Sun"], ["Luna", "Moon"], ["Cielo", "Sky"], ["Tierra", "Earth"], ["Fuego", "Fire"], ["Aire", "Air"], ["Mano", "Hand"], ["Pie", "Foot"], ["Ojo", "Eye"]],
+            level2: [["¿Cómo estás?", "How are you?"], ["Tengo hambre", "I am hungry"], ["Me gusta la música", "I like music"], ["¿Dónde está el baño?", "Where is the bathroom?"], ["Mucho gusto", "Nice to meet you"], ["¿Qué hora es?", "What time is it?"], ["Me llamo Juan", "My name is Juan"], ["¿De dónde eres?", "Where are you from?"], ["Hablo español", "I speak Spanish"], ["¿Cuántos años tienes?", "How old are you?"], ["Estoy cansado", "I am tired"], ["¿Qué quieres comer?", "What do you want to eat?"], ["Vamos al parque", "Let's go to the park"], ["Hace calor hoy", "It's hot today"], ["Me gusta bailar", "I like to dance"], ["¿Dónde vives?", "Where do you live?"], ["Trabajo en una oficina", "I work in an office"], ["¿Tienes hermanos?", "Do you have siblings?"], ["Estudio inglés", "I study English"], ["¿Qué música escuchas?", "What music do you listen to?"], ["Voy al gimnasio", "I go to the gym"], ["¿Cuál es tu color favorito?", "What is your favorite color?"], ["Me gusta cocinar", "I like to cook"], ["¿Dónde compras?", "Where do you shop?"], ["Estoy feliz", "I am happy"], ["¿Qué haces en tu tiempo libre?", "What do you do in your free time?"], ["Leo libros", "I read books"], ["¿Tienes mascotas?", "Do you have pets?"], ["Tengo un perro", "I have a dog"], ["¿Cuál es tu comida favorita?", "What is your favorite food?"], ["Vamos al cine", "Let's go to the cinema"], ["Hace frío", "It's cold"], ["¿Dónde naciste?", "Where were you born?"], ["Estudio matemáticas", "I study mathematics"], ["Me gusta viajar", "I like to travel"], ["¿Qué deporte practicas?", "What sport do you play?"], ["Trabajo duro", "I work hard"], ["¿Cuánto cuesta?", "How much does it cost?"], ["Estoy enfermo", "I am sick"], ["¿Dónde está la biblioteca?", "Where is the library?"], ["Me gusta nadar", "I like to swim"], ["¿Qué piensas?", "What do you think?"]],
+            level3: [["Había una vez un niño que vivía en una ciudad grande.", "Once upon a time there was a boy who lived in a big city."], ["En una pequeña aldea, vivía una familia feliz.", "In a small village, there lived a happy family."], ["El sol brillaba en el cielo azul.", "The sun shone in the blue sky."], ["María caminaba por el parque todos los días.", "Maria walked in the park every day."], ["El gato negro saltó sobre la mesa.", "The black cat jumped on the table."], ["Juan trabajaba en una fábrica todos los días.", "Juan worked in a factory every day."], ["La lluvia caía suavemente sobre las hojas.", "The rain fell softly on the leaves."], ["Los niños jugaban en el jardín.", "The children played in the garden."], ["El perro ladraba fuerte en la noche.", "The dog barked loudly at night."], ["Ana leía un libro interesante.", "Ana read an interesting book."], ["El río fluía tranquilo por el valle.", "The river flowed calmly through the valley."], ["Los pájaros cantaban en los árboles.", "The birds sang in the trees."], ["Pedro cocinaba comida deliciosa.", "Pedro cooked delicious food."], ["La luna brillaba en el cielo nocturno.", "The moon shone in the night sky."], ["Los amigos se reunían para cenar.", "The friends gathered for dinner."], ["El viento soplaba fuerte en la montaña.", "The wind blew strongly on the mountain."], ["Sofía dibujaba hermosas pinturas.", "Sofia drew beautiful paintings."], ["El mar estaba tranquilo esa mañana.", "The sea was calm that morning."], ["Los estudiantes estudiaban en la biblioteca.", "The students studied in the library."], ["El fuego crepitaba en la chimenea.", "The fire crackled in the fireplace."], ["Carlos nadaba en la piscina.", "Carlos swam in the pool."], ["Las flores florecían en primavera.", "The flowers bloomed in spring."], ["El tren llegaba a la estación.", "The train arrived at the station."], ["Lucía cantaba canciones alegres.", "Lucia sang happy songs."], ["El bosque estaba lleno de animales.", "The forest was full of animals."], ["Miguel escribía cartas a sus amigos.", "Miguel wrote letters to his friends."], ["La nieve caía blanca en invierno.", "The snow fell white in winter."], ["Los cocineros preparaban la cena.", "The cooks prepared dinner."], ["El sol se ponía detrás de las colinas.", "The sun set behind the hills."], ["Rosa plantaba semillas en el jardín.", "Rosa planted seeds in the garden."], ["El barco navegaba por el océano.", "The boat sailed across the ocean."], ["Los músicos tocaban instrumentos.", "The musicians played instruments."], ["El hielo se derretía en el calor.", "The ice melted in the heat."], ["Elena bailaba en la fiesta.", "Elena danced at the party."], ["Las estrellas brillaban en la noche.", "The stars shone at night."], ["Tomás pescaba en el río.", "Thomas fished in the river."], ["La hierba crecía verde en el campo.", "The grass grew green in the field."], ["Los artistas pintaban cuadros.", "The artists painted pictures."], ["El reloj marcaba la medianoche.", "The clock struck midnight."], ["Isabel tejía una bufanda.", "Isabel knitted a scarf."], ["El avión volaba alto en el cielo.", "The plane flew high in the sky."], ["Los jardineros cuidaban las plantas.", "The gardeners cared for the plants."], ["El fuego ardía en la fogata.", "The fire burned in the campfire."], ["Paula corría en el parque.", "Paula ran in the park."], ["Las olas rompían en la playa.", "The waves broke on the beach."], ["Diego construía una casa.", "Diego built a house."], ["La niebla cubría el valle.", "The fog covered the valley."], ["Los nadadores competían en la piscina.", "The swimmers competed in the pool."], ["El viento silbaba entre los árboles.", "The wind whistled through the trees."], ["Sara leía cuentos a sus hijos.", "Sara read stories to her children."], ["El puente cruzaba el río ancho.", "The bridge crossed the wide river."], ["Los bailarines movían sus cuerpos.", "The dancers moved their bodies."], ["La lluvia mojaba la tierra.", "The rain wet the earth."]]
+        },
+        French: {
+            code: 'fr',
+            level1: [["Bonjour", "Hello"], ["Merci", "Thank you"], ["Eau", "Water"], ["Ami", "Friend"], ["Pain", "Bread"], ["Chat", "Cat"], ["Chien", "Dog"], ["Maison", "House"], ["Livre", "Book"], ["Ciel", "Sky"], ["Un", "One"], ["Deux", "Two"], ["Trois", "Three"], ["Quatre", "Four"], ["Cinq", "Five"], ["Rouge", "Red"], ["Bleu", "Blue"], ["Vert", "Green"], ["Jaune", "Yellow"], ["Noir", "Black"], ["Père", "Father"], ["Mère", "Mother"], ["Fils", "Son"], ["Fille", "Daughter"], ["Frère", "Brother"], ["Sœur", "Sister"], ["Grand-père", "Grandfather"], ["Grand-mère", "Grandmother"], ["Oncle", "Uncle"], ["Tante", "Aunt"], ["Cousin", "Cousin"], ["Voiture", "Car"], ["Avion", "Plane"], ["Train", "Train"], ["Bateau", "Boat"], ["Vélo", "Bike"], ["Arbre", "Tree"], ["Fleur", "Flower"], ["Montagne", "Mountain"], ["Rivière", "River"], ["Lac", "Lake"], ["Plage", "Beach"], ["Ville", "City"], ["Village", "Village"], ["Rue", "Street"], ["École", "School"], ["Hôpital", "Hospital"], ["Magasin", "Store"], ["Restaurant", "Restaurant"], ["Café", "Coffee"], ["Thé", "Tea"]],
+            level2: [["Je t'aime", "I love you"], ["Comment allez-vous?", "How are you?"], ["Quel âge avez-vous?", "How old are you?"], ["Où habitez-vous?", "Where do you live?"], ["Je m'appelle Marie", "My name is Marie"], ["Parlez-vous français?", "Do you speak French?"], ["Il fait beau aujourd'hui", "It's nice weather today"], ["J'aime la musique", "I like music"], ["Qu'est-ce que vous faites?", "What do you do?"], ["Je suis fatigué", "I am tired"], ["Allons au parc", "Let's go to the park"], ["Quelle heure est-il?", "What time is it?"], ["J'ai faim", "I am hungry"], ["Vous aimez danser?", "Do you like to dance?"], ["Je travaille dans un bureau", "I work in an office"], ["Avez-vous des frères?", "Do you have brothers?"], ["J'étudie l'anglais", "I study English"], ["Quelle musique écoutez-vous?", "What music do you listen to?"], ["Je vais au gymnase", "I go to the gym"], ["Quelle est votre couleur préférée?", "What is your favorite color?"], ["J'aime cuisiner", "I like to cook"], ["Où achetez-vous?", "Where do you shop?"], ["Je suis heureux", "I am happy"], ["Que faites-vous pendant votre temps libre?", "What do you do in your free time?"], ["Je lis des livres", "I read books"], ["Avez-vous des animaux?", "Do you have pets?"], ["J'ai un chien", "I have a dog"], ["Quelle est votre nourriture préférée?", "What is your favorite food?"], ["Allons au cinéma", "Let's go to the cinema"], ["Il fait froid", "It's cold"], ["Où êtes-vous né?", "Where were you born?"], ["J'étudie les mathématiques", "I study mathematics"], ["J'aime voyager", "I like to travel"], ["Quel sport pratiquez-vous?", "What sport do you play?"], ["Je travaille dur", "I work hard"], ["Combien ça coûte?", "How much does it cost?"], ["Je suis malade", "I am sick"], ["Où est la bibliothèque?", "Where is the library?"], ["J'aime nager", "I like to swim"], ["Que pensez-vous?", "What do you think?"], ["Je bois du café", "I drink coffee"], ["Vous aimez le thé?", "Do you like tea?"], ["C'est un beau jour", "It's a beautiful day"], ["Je vais à l'école", "I go to school"], ["Avez-vous des enfants?", "Do you have children?"]],
+            level3: [["Il était une fois...", "Once upon a time..."], ["Dans un petit village, vivait une famille heureuse.", "In a small village, there lived a happy family."], ["Le soleil brillait dans le ciel bleu.", "The sun shone in the blue sky."], ["Marie marchait dans le parc tous les jours.", "Marie walked in the park every day."], ["Le chat noir sauta sur la table.", "The black cat jumped on the table."], ["Jean travaillait dans une usine tous les jours.", "Jean worked in a factory every day."], ["La pluie tombait doucement sur les feuilles.", "The rain fell softly on the leaves."], ["Les enfants jouaient dans le jardin.", "The children played in the garden."], ["Le chien aboyait fort la nuit.", "The dog barked loudly at night."], ["Anne lisait un livre intéressant.", "Anne read an interesting book."], ["La rivière coulait calmement dans la vallée.", "The river flowed calmly through the valley."], ["Les oiseaux chantaient dans les arbres.", "The birds sang in the trees."], ["Pierre cuisinait de la nourriture délicieuse.", "Pierre cooked delicious food."], ["La lune brillait dans le ciel nocturne.", "The moon shone in the night sky."], ["Les amis se réunissaient pour dîner.", "The friends gathered for dinner."], ["Le vent soufflait fort sur la montagne.", "The wind blew strongly on the mountain."], ["Sophie dessinait de belles peintures.", "Sophie drew beautiful paintings."], ["La mer était calme ce matin.", "The sea was calm this morning."], ["Les étudiants étudiaient à la bibliothèque.", "The students studied in the library."], ["Le feu crépitait dans la cheminée.", "The fire crackled in the fireplace."], ["Charles nageait dans la piscine.", "Charles swam in the pool."], ["Les fleurs fleurissaient au printemps.", "The flowers bloomed in spring."], ["Le train arrivait à la gare.", "The train arrived at the station."], ["Lucie chantait des chansons joyeuses.", "Lucie sang happy songs."], ["La forêt était pleine d'animaux.", "The forest was full of animals."], ["Michel écrivait des lettres à ses amis.", "Michel wrote letters to his friends."], ["La neige tombait blanche en hiver.", "The snow fell white in winter."], ["Les cuisiniers préparaient le dîner.", "The cooks prepared dinner."], ["Le soleil se couchait derrière les collines.", "The sun set behind the hills."], ["Rose plantait des graines dans le jardin.", "Rose planted seeds in the garden."], ["Le bateau naviguait sur l'océan.", "The boat sailed across the ocean."], ["Les musiciens jouaient des instruments.", "The musicians played instruments."], ["La glace fondait dans la chaleur.", "The ice melted in the heat."], ["Éléna dansait à la fête.", "Elena danced at the party."], ["Les étoiles brillaient la nuit.", "The stars shone at night."], ["Thomas pêchait dans la rivière.", "Thomas fished in the river."], ["L'herbe poussait verte dans le champ.", "The grass grew green in the field."], ["Les artistes peignaient des tableaux.", "The artists painted pictures."], ["L'horloge sonnait minuit.", "The clock struck midnight."], ["Isabelle tricotait une écharpe.", "Isabelle knitted a scarf."], ["L'avion volait haut dans le ciel.", "The plane flew high in the sky."], ["Les jardiniers soignaient les plantes.", "The gardeners cared for the plants."], ["Le feu brûlait dans le feu de camp.", "The fire burned in the campfire."], ["Paula courait dans le parc.", "Paula ran in the park."], ["Les vagues se brisaient sur la plage.", "The waves broke on the beach."], ["Diego construisait une maison.", "Diego built a house."], ["Le brouillard couvrait la vallée.", "The fog covered the valley."], ["Les nageurs concouraient dans la piscine.", "The swimmers competed in the pool."], ["Le vent sifflait entre les arbres.", "The wind whistled through the trees."], ["Sara lisait des histoires à ses enfants.", "Sara read stories to her children."], ["Le pont traversait la large rivière.", "The bridge crossed the wide river."], ["Les danseurs bougeaient leurs corps.", "The dancers moved their bodies."], ["La pluie mouillait la terre.", "The rain wet the earth."]]
+        },
+        German: {
+            code: 'de',
+            level1: [["Hallo", "Hello"], ["Danke", "Thank you"], ["Wasser", "Water"], ["Freund", "Friend"], ["Brot", "Bread"], ["Katze", "Cat"], ["Hund", "Dog"], ["Haus", "House"], ["Buch", "Book"], ["Himmel", "Sky"], ["Eins", "One"], ["Zwei", "Two"], ["Drei", "Three"], ["Vier", "Four"], ["Fünf", "Five"], ["Rot", "Red"], ["Blau", "Blue"], ["Grün", "Green"], ["Gelb", "Yellow"], ["Schwarz", "Black"], ["Vater", "Father"], ["Mutter", "Mother"], ["Sohn", "Son"], ["Tochter", "Daughter"], ["Bruder", "Brother"], ["Schwester", "Sister"], ["Großvater", "Grandfather"], ["Großmutter", "Grandmother"], ["Onkel", "Uncle"], ["Tante", "Aunt"], ["Cousin", "Cousin"], ["Auto", "Car"], ["Flugzeug", "Plane"], ["Zug", "Train"], ["Boot", "Boat"], ["Fahrrad", "Bike"], ["Baum", "Tree"], ["Blume", "Flower"], ["Berg", "Mountain"], ["Fluss", "River"], ["See", "Lake"], ["Strand", "Beach"], ["Stadt", "City"], ["Dorf", "Village"], ["Straße", "Street"], ["Schule", "School"], ["Krankenhaus", "Hospital"], ["Geschäft", "Store"], ["Restaurant", "Restaurant"], ["Kaffee", "Coffee"], ["Tee", "Tea"]],
+            level2: [["Wie geht es dir?", "How are you?"], ["Wie alt bist du?", "How old are you?"], ["Wo wohnst du?", "Where do you live?"], ["Ich heiße Anna", "My name is Anna"], ["Sprichst du Deutsch?", "Do you speak German?"], ["Es ist schönes Wetter heute", "It's nice weather today"], ["Ich liebe Musik", "I love music"], ["Was machst du?", "What do you do?"], ["Ich bin müde", "I am tired"], ["Lass uns in den Park gehen", "Let's go to the park"], ["Wie spät ist es?", "What time is it?"], ["Ich habe Hunger", "I am hungry"], ["Magst du tanzen?", "Do you like to dance?"], ["Ich arbeite in einem Büro", "I work in an office"], ["Hast du Geschwister?", "Do you have siblings?"], ["Ich lerne Englisch", "I study English"], ["Welche Musik hörst du?", "What music do you listen to?"], ["Ich gehe ins Fitnessstudio", "I go to the gym"], ["Was ist deine Lieblingsfarbe?", "What is your favorite color?"], ["Ich koche gerne", "I like to cook"], ["Wo kaufst du ein?", "Where do you shop?"], ["Ich bin glücklich", "I am happy"], ["Was machst du in deiner Freizeit?", "What do you do in your free time?"], ["Ich lese Bücher", "I read books"], ["Hast du Haustiere?", "Do you have pets?"], ["Ich habe einen Hund", "I have a dog"], ["Was ist dein Lieblingsessen?", "What is your favorite food?"], ["Lass uns ins Kino gehen", "Let's go to the cinema"], ["Es ist kalt", "It's cold"], ["Wo bist du geboren?", "Where were you born?"], ["Ich studiere Mathematik", "I study mathematics"], ["Ich reise gerne", "I like to travel"], ["Welchen Sport treibst du?", "What sport do you play?"], ["Ich arbeite hart", "I work hard"], ["Wie viel kostet das?", "How much does it cost?"], ["Ich bin krank", "I am sick"], ["Wo ist die Bibliothek?", "Where is the library?"], ["Ich schwimme gerne", "I like to swim"], ["Was denkst du?", "What do you think?"], ["Ich trinke Kaffee", "I drink coffee"], ["Magst du Tee?", "Do you like tea?"], ["Es ist ein schöner Tag", "It's a beautiful day"], ["Ich gehe zur Schule", "I go to school"], ["Hast du Kinder?", "Do you have children?"]],
+            level3: [["Es war einmal...", "Once upon a time..."], ["In einem kleinen Dorf lebte eine glückliche Familie.", "In a small village there lived a happy family."], ["Die Sonne schien am blauen Himmel.", "The sun shone in the blue sky."], ["Maria spazierte jeden Tag im Park.", "Maria walked in the park every day."], ["Die schwarze Katze sprang auf den Tisch.", "The black cat jumped on the table."], ["Johann arbeitete jeden Tag in einer Fabrik.", "Johann worked in a factory every day."], ["Der Regen fiel sanft auf die Blätter.", "The rain fell softly on the leaves."], ["Die Kinder spielten im Garten.", "The children played in the garden."], ["Der Hund bellte laut in der Nacht.", "The dog barked loudly at night."], ["Anna las ein interessantes Buch.", "Anna read an interesting book."], ["Der Fluss floss ruhig durch das Tal.", "The river flowed calmly through the valley."], ["Die Vögel sangen in den Bäumen.", "The birds sang in the trees."], ["Peter kochte leckeres Essen.", "Peter cooked delicious food."], ["Der Mond schien am Nachthimmel.", "The moon shone in the night sky."], ["Die Freunde trafen sich zum Abendessen.", "The friends gathered for dinner."], ["Der Wind wehte stark auf dem Berg.", "The wind blew strongly on the mountain."], ["Sophie malte schöne Bilder.", "Sophie drew beautiful paintings."], ["Das Meer war ruhig an diesem Morgen.", "The sea was calm this morning."], ["Die Studenten studierten in der Bibliothek.", "The students studied in the library."], ["Das Feuer knisterte im Kamin.", "The fire crackled in the fireplace."], ["Karl schwamm im Pool.", "Karl swam in the pool."], ["Die Blumen blühten im Frühling.", "The flowers bloomed in spring."], ["Der Zug kam am Bahnhof an.", "The train arrived at the station."], ["Lucia sang fröhliche Lieder.", "Lucia sang happy songs."], ["Der Wald war voller Tiere.", "The forest was full of animals."], ["Michael schrieb Briefe an seine Freunde.", "Michael wrote letters to his friends."], ["Der Schnee fiel weiß im Winter.", "The snow fell white in winter."], ["Die Köche bereiteten das Abendessen zu.", "The cooks prepared dinner."], ["Die Sonne ging hinter den Hügeln unter.", "The sun set behind the hills."], ["Rosa pflanzte Samen im Garten.", "Rosa planted seeds in the garden."], ["Das Boot segelte über den Ozean.", "The boat sailed across the ocean."], ["Die Musiker spielten Instrumente.", "The musicians played instruments."], ["Das Eis schmolz in der Hitze.", "The ice melted in the heat."], ["Elena tanzte auf der Party.", "Elena danced at the party."], ["Die Sterne leuchteten in der Nacht.", "The stars shone at night."], ["Thomas angelte im Fluss.", "Thomas fished in the river."], ["Das Gras wuchs grün auf dem Feld.", "The grass grew green in the field."], ["Die Künstler malten Bilder.", "The artists painted pictures."], ["Die Uhr schlug Mitternacht.", "The clock struck midnight."], ["Isabel strickte einen Schal.", "Isabel knitted a scarf."], ["Das Flugzeug flog hoch am Himmel.", "The plane flew high in the sky."], ["Die Gärtner pflegten die Pflanzen.", "The gardeners cared for the plants."], ["Das Feuer brannte im Lagerfeuer.", "The fire burned in the campfire."], ["Paula lief im Park.", "Paula ran in the park."], ["Die Wellen brachen am Strand.", "The waves broke on the beach."], ["Diego baute ein Haus.", "Diego built a house."], ["Der Nebel bedeckte das Tal.", "The fog covered the valley."], ["Die Schwimmer wetteiferten im Pool.", "The swimmers competed in the pool."], ["Der Wind pfiff durch die Bäume.", "The wind whistled through the trees."], ["Sara las ihren Kindern Geschichten vor.", "Sara read stories to her children."], ["Die Brücke überspannte den breiten Fluss.", "The bridge crossed the wide river."], ["Die Tänzer bewegten ihre Körper.", "The dancers moved their bodies."], ["Der Regen nässte die Erde.", "The rain wet the earth."]]
+        },
+        Italian: {
+            code: 'it',
+            level1: [["Ciao", "Hello"], ["Grazie", "Thank you"], ["Acqua", "Water"], ["Amico", "Friend"], ["Pane", "Bread"], ["Gatto", "Cat"], ["Cane", "Dog"], ["Casa", "House"], ["Libro", "Book"], ["Cielo", "Sky"], ["Uno", "One"], ["Due", "Two"], ["Tre", "Three"], ["Quattro", "Four"], ["Cinque", "Five"], ["Rosso", "Red"], ["Blu", "Blue"], ["Verde", "Green"], ["Giallo", "Yellow"], ["Nero", "Black"], ["Padre", "Father"], ["Madre", "Mother"], ["Figlio", "Son"], ["Figlia", "Daughter"], ["Fratello", "Brother"], ["Sorella", "Sister"], ["Nonno", "Grandfather"], ["Nonna", "Grandmother"], ["Zio", "Uncle"], ["Zia", "Aunt"], ["Cugino", "Cousin"], ["Auto", "Car"], ["Aereo", "Plane"], ["Treno", "Train"], ["Barca", "Boat"], ["Bicicletta", "Bike"], ["Albero", "Tree"], ["Fiore", "Flower"], ["Montagna", "Mountain"], ["Fiume", "River"], ["Lago", "Lake"], ["Spiaggia", "Beach"], ["Città", "City"], ["Villaggio", "Village"], ["Strada", "Street"], ["Scuola", "School"], ["Ospedale", "Hospital"], ["Negozio", "Store"], ["Ristorante", "Restaurant"], ["Caffè", "Coffee"], ["Tè", "Tea"]],
+            level2: [["Come stai?", "How are you?"], ["Quanti anni hai?", "How old are you?"], ["Dove abiti?", "Where do you live?"], ["Mi chiamo Marco", "My name is Marco"], ["Parli italiano?", "Do you speak Italian?"], ["Fa bel tempo oggi", "It's nice weather today"], ["Amo la musica", "I love music"], ["Cosa fai?", "What do you do?"], ["Sono stanco", "I am tired"], ["Andiamo al parco", "Let's go to the park"], ["Che ore sono?", "What time is it?"], ["Ho fame", "I am hungry"], ["Ti piace ballare?", "Do you like to dance?"], ["Lavoro in un ufficio", "I work in an office"], ["Hai fratelli?", "Do you have siblings?"], ["Studio inglese", "I study English"], ["Che musica ascolti?", "What music do you listen to?"], ["Vado in palestra", "I go to the gym"], ["Qual è il tuo colore preferito?", "What is your favorite color?"], ["Mi piace cucinare", "I like to cook"], ["Dove fai la spesa?", "Where do you shop?"], ["Sono felice", "I am happy"], ["Cosa fai nel tempo libero?", "What do you do in your free time?"], ["Leggo libri", "I read books"], ["Hai animali domestici?", "Do you have pets?"], ["Ho un cane", "I have a dog"], ["Qual è il tuo cibo preferito?", "What is your favorite food?"], ["Andiamo al cinema", "Let's go to the cinema"], ["Fa freddo", "It's cold"], ["Dove sei nato?", "Where were you born?"], ["Studio matematica", "I study mathematics"], ["Mi piace viaggiare", "I like to travel"], ["Che sport pratichi?", "What sport do you play?"], ["Lavoro duro", "I work hard"], ["Quanto costa?", "How much does it cost?"], ["Sono malato", "I am sick"], ["Dov'è la biblioteca?", "Where is the library?"], ["Mi piace nuotare", "I like to swim"], ["Cosa pensi?", "What do you think?"], ["Bevo caffè", "I drink coffee"], ["Ti piace il tè?", "Do you like tea?"], ["È una bella giornata", "It's a beautiful day"], ["Vado a scuola", "I go to school"], ["Hai figli?", "Do you have children?"]],
+            level3: [["C'era una volta un ragazzo che viveva in una grande città.", "Once upon a time there was a boy who lived in a big city."], ["In un piccolo villaggio viveva una famiglia felice.", "In a small village there lived a happy family."], ["Il sole splendeva nel cielo blu.", "The sun shone in the blue sky."], ["Maria camminava nel parco ogni giorno.", "Maria walked in the park every day."], ["Il gatto nero saltò sul tavolo.", "The black cat jumped on the table."], ["Giovanni lavorava in una fabbrica ogni giorno.", "Giovanni worked in a factory every day."], ["La pioggia cadeva dolcemente sulle foglie.", "The rain fell softly on the leaves."], ["I bambini giocavano in giardino.", "The children played in the garden."], ["Il cane abbaiava forte di notte.", "The dog barked loudly at night."], ["Anna leggeva un libro interessante.", "Anna read an interesting book."], ["Il fiume scorreva tranquillo nella valle.", "The river flowed calmly through the valley."], ["Gli uccelli cantavano sugli alberi.", "The birds sang in the trees."], ["Piero cucinava cibo delizioso.", "Piero cooked delicious food."], ["La luna splendeva nel cielo notturno.", "The moon shone in the night sky."], ["Gli amici si riunivano per cena.", "The friends gathered for dinner."], ["Il vento soffiava forte sulla montagna.", "The wind blew strongly on the mountain."], ["Sofia disegnava bei dipinti.", "Sofia drew beautiful paintings."], ["Il mare era calmo quella mattina.", "The sea was calm that morning."], ["Gli studenti studiavano in biblioteca.", "The students studied in the library."], ["Il fuoco crepitava nel camino.", "The fire crackled in the fireplace."], ["Carlo nuotava nella piscina.", "Carlo swam in the pool."], ["I fiori sbocciavano in primavera.", "The flowers bloomed in spring."], ["Il treno arrivava alla stazione.", "The train arrived at the station."], ["Lucia cantava canzoni allegre.", "Lucia sang happy songs."], ["La foresta era piena di animali.", "The forest was full of animals."], ["Michele scriveva lettere ai suoi amici.", "Michele wrote letters to his friends."], ["La neve cadeva bianca in inverno.", "The snow fell white in winter."], ["I cuochi preparavano la cena.", "The cooks prepared dinner."], ["Il sole tramontava dietro le colline.", "The sun set behind the hills."], ["Rosa piantava semi in giardino.", "Rosa planted seeds in the garden."], ["La barca navigava sull'oceano.", "The boat sailed across the ocean."], ["I musicisti suonavano strumenti.", "The musicians played instruments."], ["Il ghiaccio si scioglieva nel calore.", "The ice melted in the heat."], ["Elena ballava alla festa.", "Elena danced at the party."], ["Le stelle brillavano di notte.", "The stars shone at night."], ["Tommaso pescava nel fiume.", "Thomas fished in the river."], ["L'erba cresceva verde nel campo.", "The grass grew green in the field."], ["Gli artisti dipingevano quadri.", "The artists painted pictures."], ["L'orologio batteva la mezzanotte.", "The clock struck midnight."], ["Isabella lavorava a maglia una sciarpa.", "Isabella knitted a scarf."], ["L'aereo volava alto nel cielo.", "The plane flew high in the sky."], ["I giardinieri curavano le piante.", "The gardeners cared for the plants."], ["Il fuoco bruciava nel falò.", "The fire burned in the campfire."], ["Paola correva nel parco.", "Paola ran in the park."], ["Le onde si rompevano sulla spiaggia.", "The waves broke on the beach."], ["Diego costruiva una casa.", "Diego built a house."], ["La nebbia copriva la valle.", "The fog covered the valley."], ["I nuotatori gareggiavano nella piscina.", "The swimmers competed in the pool."], ["Il vento fischiava tra gli alberi.", "The wind whistled through the trees."], ["Sara leggeva storie ai suoi figli.", "Sara read stories to her children."], ["Il ponte attraversava il largo fiume.", "The bridge crossed the wide river."], ["I ballerini muovevano i loro corpi.", "The dancers moved their bodies."], ["La pioggia bagnava la terra.", "The rain wet the earth."]]
+        },
+        Portuguese: {
+            code: 'pt',
+            level1: [["Olá", "Hello"], ["Obrigado", "Thank you"], ["Água", "Water"], ["Amigo", "Friend"], ["Pão", "Bread"], ["Gato", "Cat"], ["Cão", "Dog"], ["Casa", "House"], ["Livro", "Book"], ["Céu", "Sky"], ["Um", "One"], ["Dois", "Two"], ["Três", "Three"], ["Quatro", "Four"], ["Cinco", "Five"], ["Vermelho", "Red"], ["Azul", "Blue"], ["Verde", "Green"], ["Amarelo", "Yellow"], ["Preto", "Black"], ["Pai", "Father"], ["Mãe", "Mother"], ["Filho", "Son"], ["Filha", "Daughter"], ["Irmão", "Brother"], ["Irmã", "Sister"], ["Avô", "Grandfather"], ["Avó", "Grandmother"], ["Tio", "Uncle"], ["Tia", "Aunt"], ["Primo", "Cousin"], ["Carro", "Car"], ["Avião", "Plane"], ["Trem", "Train"], ["Barco", "Boat"], ["Bicicleta", "Bike"], ["Árvore", "Tree"], ["Flor", "Flower"], ["Montanha", "Mountain"], ["Rio", "River"], ["Lago", "Lake"], ["Praia", "Beach"], ["Cidade", "City"], ["Aldeia", "Village"], ["Rua", "Street"], ["Escola", "School"], ["Hospital", "Hospital"], ["Loja", "Store"], ["Restaurante", "Restaurant"], ["Café", "Coffee"], ["Chá", "Tea"]],
+            level2: [["Como você está?", "How are you?"], ["Quantos anos você tem?", "How old are you?"], ["Onde você mora?", "Where do you live?"], ["Eu me chamo João", "My name is João"], ["Você fala português?", "Do you speak Portuguese?"], ["Faz bom tempo hoje", "It's nice weather today"], ["Eu amo música", "I love music"], ["O que você faz?", "What do you do?"], ["Estou cansado", "I am tired"], ["Vamos ao parque", "Let's go to the park"], ["Que horas são?", "What time is it?"], ["Estou com fome", "I am hungry"], ["Você gosta de dançar?", "Do you like to dance?"], ["Trabalho em um escritório", "I work in an office"], ["Você tem irmãos?", "Do you have siblings?"], ["Estudo inglês", "I study English"], ["Que música você ouve?", "What music do you listen to?"], ["Vou à academia", "I go to the gym"], ["Qual é a sua cor favorita?", "What is your favorite color?"], ["Gosto de cozinhar", "I like to cook"], ["Onde você faz compras?", "Where do you shop?"], ["Estou feliz", "I am happy"], ["O que você faz no seu tempo livre?", "What do you do in your free time?"], ["Leio livros", "I read books"], ["Você tem animais de estimação?", "Do you have pets?"], ["Tenho um cachorro", "I have a dog"], ["Qual é a sua comida favorita?", "What is your favorite food?"], ["Vamos ao cinema", "Let's go to the cinema"], ["Faz frio", "It's cold"], ["Onde você nasceu?", "Where were you born?"], ["Estudo matemática", "I study mathematics"], ["Gosto de viajar", "I like to travel"], ["Que esporte você pratica?", "What sport do you play?"], ["Trabalho duro", "I work hard"], ["Quanto custa?", "How much does it cost?"], ["Estou doente", "I am sick"], ["Onde fica a biblioteca?", "Where is the library?"], ["Gosto de nadar", "I like to swim"], ["O que você pensa?", "What do you think?"], ["Bebo café", "I drink coffee"], ["Você gosta de chá?", "Do you like tea?"], ["É um dia bonito", "It's a beautiful day"], ["Vou à escola", "I go to school"], ["Você tem filhos?", "Do you have children?"]],
+            level3: [["Era uma vez um menino que morava em uma grande cidade.", "Once upon a time there was a boy who lived in a big city."], ["Em uma pequena aldeia vivia uma família feliz.", "In a small village there lived a happy family."], ["O sol brilhava no céu azul.", "The sun shone in the blue sky."], ["Maria caminhava no parque todos os dias.", "Maria walked in the park every day."], ["O gato preto pulou na mesa.", "The black cat jumped on the table."], ["João trabalhava em uma fábrica todos os dias.", "João worked in a factory every day."], ["A chuva caía suavemente nas folhas.", "The rain fell softly on the leaves."], ["As crianças brincavam no jardim.", "The children played in the garden."], ["O cachorro latia alto à noite.", "The dog barked loudly at night."], ["Ana lia um livro interessante.", "Ana read an interesting book."], ["O rio corria calmamente pelo vale.", "The river flowed calmly through the valley."], ["Os pássaros cantavam nas árvores.", "The birds sang in the trees."], ["Pedro cozinhava comida deliciosa.", "Pedro cooked delicious food."], ["A lua brilhava no céu noturno.", "The moon shone in the night sky."], ["Os amigos se reuniam para jantar.", "The friends gathered for dinner."], ["O vento soprava forte na montanha.", "The wind blew strongly on the mountain."], ["Sofia desenhava belas pinturas.", "Sofia drew beautiful paintings."], ["O mar estava calmo naquela manhã.", "The sea was calm that morning."], ["Os estudantes estudavam na biblioteca.", "The students studied in the library."], ["O fogo crepitava na lareira.", "The fire crackled in the fireplace."], ["Carlos nadava na piscina.", "Carlos swam in the pool."], ["As flores floresciam na primavera.", "The flowers bloomed in spring."], ["O trem chegava à estação.", "The train arrived at the station."], ["Lucia cantava canções alegres.", "Lucia sang happy songs."], ["A floresta estava cheia de animais.", "The forest was full of animals."], ["Miguel escrevia cartas aos seus amigos.", "Miguel wrote letters to his friends."], ["A neve caía branca no inverno.", "The snow fell white in winter."], ["Os cozinheiros preparavam o jantar.", "The cooks prepared dinner."], ["O sol se punha atrás das colinas.", "The sun set behind the hills."], ["Rosa plantava sementes no jardim.", "Rosa planted seeds in the garden."], ["O barco navegava pelo oceano.", "The boat sailed across the ocean."], ["Os músicos tocavam instrumentos.", "The musicians played instruments."], ["O gelo derretia no calor.", "The ice melted in the heat."], ["Elena dançava na festa.", "Elena danced at the party."], ["As estrelas brilhavam à noite.", "The stars shone at night."], ["Tomás pescava no rio.", "Thomas fished in the river."], ["A grama crescia verde no campo.", "The grass grew green in the field."], ["Os artistas pintavam quadros.", "The artists painted pictures."], ["O relógio batia meia-noite.", "The clock struck midnight."], ["Isabel tricotava um cachecol.", "Isabel knitted a scarf."], ["O avião voava alto no céu.", "The plane flew high in the sky."], ["Os jardineiros cuidavam das plantas.", "The gardeners cared for the plants."], ["O fogo queimava na fogueira.", "The fire burned in the campfire."], ["Paula corria no parque.", "Paula ran in the park."], ["As ondas quebravam na praia.", "The waves broke on the beach."], ["Diego construía uma casa.", "Diego built a house."], ["A névoa cobria o vale.", "The fog covered the valley."], ["Os nadadores competiam na piscina.", "The swimmers competed in the pool."], ["O vento assobiava entre as árvores.", "The wind whistled through the trees."], ["Sara lia histórias para seus filhos.", "Sara read stories to her children."], ["A ponte cruzava o largo rio.", "The bridge crossed the wide river."], ["Os dançarinos moviam seus corpos.", "The dancers moved their bodies."], ["A chuva molhava a terra.", "The rain wet the earth."]]
+        },
+        Dutch: {
+            code: 'nl',
+            level1: [["Hallo", "Hello"], ["Bedankt", "Thank you"], ["Water", "Water"], ["Vriend", "Friend"], ["Brood", "Bread"], ["Kat", "Cat"], ["Hond", "Dog"], ["Huis", "House"], ["Boek", "Book"], ["Hemel", "Sky"], ["Een", "One"], ["Twee", "Two"], ["Drie", "Three"], ["Vier", "Four"], ["Vijf", "Five"], ["Rood", "Red"], ["Blauw", "Blue"], ["Groen", "Green"], ["Geel", "Yellow"], ["Zwart", "Black"], ["Vader", "Father"], ["Moeder", "Mother"], ["Zoon", "Son"], ["Dochter", "Daughter"], ["Broer", "Brother"], ["Zus", "Sister"], ["Grootvader", "Grandfather"], ["Grootmoeder", "Grandmother"], ["Oom", "Uncle"], ["Tante", "Aunt"], ["Neef", "Cousin"], ["Auto", "Car"], ["Vliegtuig", "Plane"], ["Trein", "Train"], ["Boot", "Boat"], ["Fiets", "Bike"], ["Boom", "Tree"], ["Bloem", "Flower"], ["Berg", "Mountain"], ["Rivier", "River"], ["Meer", "Lake"], ["Strand", "Beach"], ["Stad", "City"], ["Dorp", "Village"], ["Straat", "Street"], ["School", "School"], ["Ziekenhuis", "Hospital"], ["Winkel", "Store"], ["Restaurant", "Restaurant"], ["Koffie", "Coffee"], ["Thee", "Tea"]],
+            level2: [["Hoe gaat het met je?", "How are you?"], ["Hoe oud ben je?", "How old are you?"], ["Waar woon je?", "Where do you live?"], ["Ik heet Jan", "My name is Jan"], ["Spreek je Nederlands?", "Do you speak Dutch?"], ["Het is mooi weer vandaag", "It's nice weather today"], ["Ik hou van muziek", "I love music"], ["Wat doe je?", "What do you do?"], ["Ik ben moe", "I am tired"], ["Laten we naar het park gaan", "Let's go to the park"], ["Hoe laat is het?", "What time is it?"], ["Ik heb honger", "I am hungry"], ["Hou je van dansen?", "Do you like to dance?"], ["Ik werk op een kantoor", "I work in an office"], ["Heb je broers?", "Do you have siblings?"], ["Ik studeer Engels", "I study English"], ["Welke muziek luister je?", "What music do you listen to?"], ["Ik ga naar de sportschool", "I go to the gym"], ["Wat is je lievelingskleur?", "What is your favorite color?"], ["Ik kook graag", "I like to cook"], ["Waar doe je boodschappen?", "Where do you shop?"], ["Ik ben gelukkig", "I am happy"], ["Wat doe je in je vrije tijd?", "What do you do in your free time?"], ["Ik lees boeken", "I read books"], ["Heb je huisdieren?", "Do you have pets?"], ["Ik heb een hond", "I have a dog"], ["Wat is je favoriete eten?", "What is your favorite food?"], ["Laten we naar de bioscoop gaan", "Let's go to the cinema"], ["Het is koud", "It's cold"], ["Waar ben je geboren?", "Where were you born?"], ["Ik studeer wiskunde", "I study mathematics"], ["Ik reis graag", "I like to travel"], ["Welke sport doe je?", "What sport do you play?"], ["Ik werk hard", "I work hard"], ["Hoeveel kost het?", "How much does it cost?"], ["Ik ben ziek", "I am sick"], ["Waar is de bibliotheek?", "Where is the library?"], ["Ik zwem graag", "I like to swim"], ["Wat denk je?", "What do you think?"], ["Ik drink koffie", "I drink coffee"], ["Hou je van thee?", "Do you like tea?"], ["Het is een mooie dag", "It's a beautiful day"], ["Ik ga naar school", "I go to school"], ["Heb je kinderen?", "Do you have children?"]],
+            level3: [["Er was eens een jongen die in een grote stad woonde.", "Once upon a time there was a boy who lived in a big city."], ["In een klein dorp woonde een gelukkig gezin.", "In a small village there lived a happy family."], ["De zon scheen aan de blauwe hemel.", "The sun shone in the blue sky."], ["Maria wandelde elke dag in het park.", "Maria walked in the park every day."], ["De zwarte kat sprong op de tafel.", "The black cat jumped on the table."], ["Jan werkte elke dag in een fabriek.", "Jan worked in a factory every day."], ["De regen viel zacht op de bladeren.", "The rain fell softly on the leaves."], ["De kinderen speelden in de tuin.", "The children played in the garden."], ["De hond blafte luid in de nacht.", "The dog barked loudly at night."], ["Anna las een interessant boek.", "Anna read an interesting book."], ["De rivier stroomde kalm door het dal.", "The river flowed calmly through the valley."], ["De vogels zongen in de bomen.", "The birds sang in the trees."], ["Peter kookte heerlijk eten.", "Peter cooked delicious food."], ["De maan scheen aan de nachtelijke hemel.", "The moon shone in the night sky."], ["De vrienden kwamen samen voor het diner.", "The friends gathered for dinner."], ["De wind waaide hard op de berg.", "The wind blew strongly on the mountain."], ["Sofia tekende mooie schilderijen.", "Sofia drew beautiful paintings."], ["De zee was kalm die ochtend.", "The sea was calm that morning."], ["De studenten studeerden in de bibliotheek.", "The students studied in the library."], ["Het vuur knetterde in de haard.", "The fire crackled in the fireplace."], ["Karel zwom in het zwembad.", "Karel swam in the pool."], ["De bloemen bloeiden in de lente.", "The flowers bloomed in spring."], ["De trein arriveerde op het station.", "The train arrived at the station."], ["Lucia zong vrolijke liedjes.", "Lucia sang happy songs."], ["Het bos was vol dieren.", "The forest was full of animals."], ["Michael schreef brieven aan zijn vrienden.", "Michael wrote letters to his friends."], ["De sneeuw viel wit in de winter.", "The snow fell white in winter."], ["De koks bereidden het diner.", "The cooks prepared dinner."], ["De zon ging onder achter de heuvels.", "The sun set behind the hills."], ["Rosa plantte zaden in de tuin.", "Rosa planted seeds in the garden."], ["De boot voer over de oceaan.", "The boat sailed across the ocean."], ["De muzikanten speelden instrumenten.", "The musicians played instruments."], ["Het ijs smolt in de hitte.", "The ice melted in the heat."], ["Elena danste op het feest.", "Elena danced at the party."], ["De sterren schenen 's nachts.", "The stars shone at night."], ["Thomas viste in de rivier.", "Thomas fished in the river."], ["Het gras groeide groen op het veld.", "The grass grew green in the field."], ["De kunstenaars schilderden schilderijen.", "The artists painted pictures."], ["De klok sloeg middernacht.", "The clock struck midnight."], ["Isabel breide een sjaal.", "Isabel knitted a scarf."], ["Het vliegtuig vloog hoog in de lucht.", "The plane flew high in the sky."], ["De tuiniers zorgden voor de planten.", "The gardeners cared for the plants."], ["Het vuur brandde in het kampvuur.", "The fire burned in the campfire."], ["Paula rende in het park.", "Paula ran in the park."], ["De golven braken op het strand.", "The waves broke on the beach."], ["Diego bouwde een huis.", "Diego built a house."], ["De mist bedekte het dal.", "The fog covered the valley."], ["De zwemmers wedijverden in het zwembad.", "The swimmers competed in the pool."], ["De wind floot door de bomen.", "The wind whistled through the trees."], ["Sara las verhalen voor aan haar kinderen.", "Sara read stories to her children."], ["De brug overspande de brede rivier.", "The bridge crossed the wide river."], ["De dansers bewogen hun lichamen.", "The dancers moved their bodies."], ["De regen maakte de aarde nat.", "The rain wet the earth."]]
+        },
+        Russian: {
+            code: 'ru',
+            level1: [["Привет", "Hello"], ["Спасибо", "Thank you"], ["Вода", "Water"], ["Друг", "Friend"], ["Хлеб", "Bread"], ["Кот", "Cat"], ["Собака", "Dog"], ["Дом", "House"], ["Книга", "Book"], ["Небо", "Sky"], ["Один", "One"], ["Два", "Two"], ["Три", "Three"], ["Четыре", "Four"], ["Пять", "Five"], ["Красный", "Red"], ["Синий", "Blue"], ["Зелёный", "Green"], ["Жёлтый", "Yellow"], ["Чёрный", "Black"], ["Отец", "Father"], ["Мать", "Mother"], ["Сын", "Son"], ["Дочь", "Daughter"], ["Брат", "Brother"], ["Сестра", "Sister"], ["Дедушка", "Grandfather"], ["Бабушка", "Grandmother"], ["Дядя", "Uncle"], ["Тётя", "Aunt"], ["Двоюродный брат", "Cousin"], ["Машина", "Car"], ["Самолёт", "Plane"], ["Поезд", "Train"], ["Лодка", "Boat"], ["Велосипед", "Bike"], ["Дерево", "Tree"], ["Цветок", "Flower"], ["Гора", "Mountain"], ["Река", "River"], ["Озеро", "Lake"], ["Пляж", "Beach"], ["Город", "City"], ["Деревня", "Village"], ["Улица", "Street"], ["Школа", "School"], ["Больница", "Hospital"], ["Магазин", "Store"], ["Ресторан", "Restaurant"], ["Кофе", "Coffee"], ["Чай", "Tea"]],
+            level2: [["Как дела?", "How are you?"], ["Сколько тебе лет?", "How old are you?"], ["Где ты живёшь?", "Where do you live?"], ["Меня зовут Иван", "My name is Ivan"], ["Ты говоришь по-русски?", "Do you speak Russian?"], ["Сегодня хорошая погода", "It's nice weather today"], ["Я люблю музыку", "I love music"], ["Что ты делаешь?", "What do you do?"], ["Я устал", "I am tired"], ["Пойдём в парк", "Let's go to the park"], ["Который час?", "What time is it?"], ["Я голоден", "I am hungry"], ["Ты любишь танцевать?", "Do you like to dance?"], ["Я работаю в офисе", "I work in an office"], ["У тебя есть братья?", "Do you have siblings?"], ["Я изучаю английский", "I study English"], ["Какую музыку ты слушаешь?", "What music do you listen to?"], ["Я хожу в спортзал", "I go to the gym"], ["Какой твой любимый цвет?", "What is your favorite color?"], ["Я люблю готовить", "I like to cook"], ["Где ты делаешь покупки?", "Where do you shop?"], ["Я счастлив", "I am happy"], ["Что ты делаешь в свободное время?", "What do you do in your free time?"], ["Я читаю книги", "I read books"], ["У тебя есть домашние животные?", "Do you have pets?"], ["У меня есть собака", "I have a dog"], ["Какая твоя любимая еда?", "What is your favorite food?"], ["Пойдём в кино", "Let's go to the cinema"], ["Холодно", "It's cold"], ["Где ты родился?", "Where were you born?"], ["Я изучаю математику", "I study mathematics"], ["Я люблю путешествовать", "I like to travel"], ["Какой спорт ты занимаешься?", "What sport do you play?"], ["Я работаю усердно", "I work hard"], ["Сколько это стоит?", "How much does it cost?"], ["Я болен", "I am sick"], ["Где библиотека?", "Where is the library?"], ["Я люблю плавать", "I like to swim"], ["Что ты думаешь?", "What do you think?"], ["Я пью кофе", "I drink coffee"], ["Ты любишь чай?", "Do you like tea?"], ["Это прекрасный день", "It's a beautiful day"], ["Я хожу в школу", "I go to school"], ["У тебя есть дети?", "Do you have children?"]],
+            level3: [["Жил-был мальчик, который жил в большом городе.", "Once upon a time there was a boy who lived in a big city."], ["В маленькой деревне жила счастливая семья.", "In a small village there lived a happy family."], ["Солнце светило в голубом небе.", "The sun shone in the blue sky."], ["Мария гуляла в парке каждый день.", "Maria walked in the park every day."], ["Чёрная кошка прыгнула на стол.", "The black cat jumped on the table."], ["Иван работал на фабрике каждый день.", "Ivan worked in a factory every day."], ["Дождь падал мягко на листья.", "The rain fell softly on the leaves."], ["Дети играли в саду.", "The children played in the garden."], ["Собака лаяла громко ночью.", "The dog barked loudly at night."], ["Анна читала интересную книгу.", "Anna read an interesting book."], ["Река текла спокойно по долине.", "The river flowed calmly through the valley."], ["Птицы пели на деревьях.", "The birds sang in the trees."], ["Пётр готовил вкусную еду.", "Peter cooked delicious food."], ["Луна светила в ночном небе.", "The moon shone in the night sky."], ["Друзья собирались на ужин.", "The friends gathered for dinner."], ["Ветер дул сильно на горе.", "The wind blew strongly on the mountain."], ["София рисовала красивые картины.", "Sofia drew beautiful paintings."], ["Море было спокойным тем утром.", "The sea was calm that morning."], ["Студенты учились в библиотеке.", "The students studied in the library."], ["Огонь потрескивал в камине.", "The fire crackled in the fireplace."], ["Карл плавал в бассейне.", "Karl swam in the pool."], ["Цветы цвели весной.", "The flowers bloomed in spring."], ["Поезд прибыл на станцию.", "The train arrived at the station."], ["Люсия пела весёлые песни.", "Lucia sang happy songs."], ["Лес был полон животных.", "The forest was full of animals."], ["Михаил писал письма друзьям.", "Michael wrote letters to his friends."], ["Снег падал белый зимой.", "The snow fell white in winter."], ["Повара готовили ужин.", "The cooks prepared dinner."], ["Солнце садилось за холмами.", "The sun set behind the hills."], ["Роза сажала семена в саду.", "Rosa planted seeds in the garden."], ["Лодка плыла по океану.", "The boat sailed across the ocean."], ["Музыканты играли на инструментах.", "The musicians played instruments."], ["Лёд таял в жаре.", "The ice melted in the heat."], ["Елена танцевала на вечеринке.", "Elena danced at the party."], ["Звёзды светили ночью.", "The stars shone at night."], ["Томас ловил рыбу в реке.", "Thomas fished in the river."], ["Трава росла зелёная на поле.", "The grass grew green in the field."], ["Художники рисовали картины.", "The artists painted pictures."], ["Часы пробили полночь.", "The clock struck midnight."], ["Изабелла вязала шарф.", "Isabella knitted a scarf."], ["Самолёт летел высоко в небе.", "The plane flew high in the sky."], ["Садовники ухаживали за растениями.", "The gardeners cared for the plants."], ["Огонь горел в костре.", "The fire burned in the campfire."], ["Пола бегала в парке.", "Paula ran in the park."], ["Волны разбивались о берег.", "The waves broke on the beach."], ["Диего строил дом.", "Diego built a house."], ["Туман покрывал долину.", "The fog covered the valley."], ["Пловцы соревновались в бассейне.", "The swimmers competed in the pool."], ["Ветер свистел между деревьями.", "The wind whistled through the trees."], ["Сара читала сказки своим детям.", "Sara read stories to her children."], ["Мост пересекал широкую реку.", "The bridge crossed the wide river."], ["Танцоры двигали своими телами.", "The dancers moved their bodies."], ["Дождь мочил землю.", "The rain wet the earth."]]
+        },
+        Turkish: {
+            code: 'tr',
+            level1: [["Merhaba", "Hello"], ["Teşekkürler", "Thank you"], ["Su", "Water"], ["Arkadaş", "Friend"], ["Ekmek", "Bread"], ["Kedi", "Cat"], ["Köpek", "Dog"], ["Ev", "House"], ["Kitap", "Book"], ["Gökyüzü", "Sky"], ["Bir", "One"], ["İki", "Two"], ["Üç", "Three"], ["Dört", "Four"], ["Beş", "Five"], ["Kırmızı", "Red"], ["Mavi", "Blue"], ["Yeşil", "Green"], ["Sarı", "Yellow"], ["Siyah", "Black"], ["Baba", "Father"], ["Anne", "Mother"], ["Oğul", "Son"], ["Kız", "Daughter"], ["Erkek kardeş", "Brother"], ["Kız kardeş", "Sister"], ["Dede", "Grandfather"], ["Nine", "Grandmother"], ["Amca", "Uncle"], ["Teyze", "Aunt"], ["Kuzen", "Cousin"], ["Araba", "Car"], ["Uçak", "Plane"], ["Tren", "Train"], ["Tekne", "Boat"], ["Bisiklet", "Bike"], ["Ağaç", "Tree"], ["Çiçek", "Flower"], ["Dağ", "Mountain"], ["Nehir", "River"], ["Göl", "Lake"], ["Plaj", "Beach"], ["Şehir", "City"], ["Köy", "Village"], ["Sokak", "Street"], ["Okul", "School"], ["Hastane", "Hospital"], ["Mağaza", "Store"], ["Restoran", "Restaurant"], ["Kahve", "Coffee"], ["Çay", "Tea"]],
+            level2: [["Nasılsın?", "How are you?"], ["Kaç yaşındasın?", "How old are you?"], ["Nerede yaşıyorsun?", "Where do you live?"], ["Benim adım Ahmet", "My name is Ahmet"], ["Türkçe konuşuyor musun?", "Do you speak Turkish?"], ["Bugün hava güzel", "It's nice weather today"], ["Müzik seviyorum", "I love music"], ["Ne yapıyorsun?", "What do you do?"], ["Yorgunum", "I am tired"], ["Parka gidelim", "Let's go to the park"], ["Saat kaç?", "What time is it?"], ["Açım", "I am hungry"], ["Dans etmeyi sever misin?", "Do you like to dance?"], ["Bir ofiste çalışıyorum", "I work in an office"], ["Kardeşlerin var mı?", "Do you have siblings?"], ["İngilizce öğreniyorum", "I study English"], ["Hangi müziği dinliyorsun?", "What music do you listen to?"], ["Spor salonuna gidiyorum", "I go to the gym"], ["En sevdiğin renk nedir?", "What is your favorite color?"], ["Yemek yapmayı seviyorum", "I like to cook"], ["Nerede alışveriş yapıyorsun?", "Where do you shop?"], ["Mutluyum", "I am happy"], ["Boş zamanında ne yapıyorsun?", "What do you do in your free time?"], ["Kitap okuyorum", "I read books"], ["Evcil hayvanın var mı?", "Do you have pets?"], ["Bir köpeğim var", "I have a dog"], ["En sevdiğin yemek nedir?", "What is your favorite food?"], ["Sinemaya gidelim", "Let's go to the cinema"], ["Soğuk", "It's cold"], ["Nerede doğdun?", "Where were you born?"], ["Matematik öğreniyorum", "I study mathematics"], ["Seyahat etmeyi seviyorum", "I like to travel"], ["Hangi sporu yapıyorsun?", "What sport do you play?"], ["Çok çalışıyorum", "I work hard"], ["Ne kadar tutuyor?", "How much does it cost?"], ["Hastayım", "I am sick"], ["Kütüphane nerede?", "Where is the library?"], ["Yüzmeyi seviyorum", "I like to swim"], ["Ne düşünüyorsun?", "What do you think?"], ["Kahve içiyorum", "I drink coffee"], ["Çay sever misin?", "Do you like tea?"], ["Güzel bir gün", "It's a beautiful day"], ["Okula gidiyorum", "I go to school"], ["Çocuğun var mı?", "Do you have children?"]],
+            level3: [["Bir zamanlar büyük bir şehirde yaşayan bir çocuk vardı.", "Once upon a time there was a boy who lived in a big city."], ["Küçük bir köyde mutlu bir aile yaşıyordu.", "In a small village there lived a happy family."], ["Güneş mavi gökyüzünde parlıyordu.", "The sun shone in the blue sky."], ["Maria her gün parkta yürüyordu.", "Maria walked in the park every day."], ["Siyah kedi masaya sıçradı.", "The black cat jumped on the table."], ["Ahmet her gün fabrikada çalışıyordu.", "Ahmet worked in a factory every day."], ["Yağmur yapraklara yumuşakça düşüyordu.", "The rain fell softly on the leaves."], ["Çocuklar bahçede oynuyordu.", "The children played in the garden."], ["Köpek geceleyin yüksek sesle havladı.", "The dog barked loudly at night."], ["Ayşe ilginç bir kitap okuyordu.", "Ayşe read an interesting book."], ["Nehir vadi boyunca sakin akıyordu.", "The river flowed calmly through the valley."], ["Kuşlar ağaçlarda şarkı söylüyordu.", "The birds sang in the trees."], ["Mehmet lezzetli yemek pişirdi.", "Mehmet cooked delicious food."], ["Ay gece gökyüzünde parlıyordu.", "The moon shone in the night sky."], ["Arkadaşlar akşam yemeği için toplandılar.", "The friends gathered for dinner."], ["Rüzgar dağda güçlü esiyordu.", "The wind blew strongly on the mountain."], ["Fatma güzel resimler çizdi.", "Fatma drew beautiful paintings."], ["Deniz o sabah sakin idi.", "The sea was calm that morning."], ["Öğrenciler kütüphanede çalışıyordu.", "The students studied in the library."], ["Ateş şöminede çatırdıyordu.", "The fire crackled in the fireplace."], ["Ali havuzda yüzüyordu.", "Ali swam in the pool."], ["Çiçekler baharda açıyordu.", "The flowers bloomed in spring."], ["Tren istasyona geldi.", "The train arrived at the station."], ["Zeynep neşeli şarkılar söyledi.", "Zeynep sang happy songs."], ["Orman hayvanlarla doluydu.", "The forest was full of animals."], ["Hasan arkadaşlarına mektup yazdı.", "Hasan wrote letters to his friends."], ["Kar kışın beyaz düşüyordu.", "The snow fell white in winter."], ["Aşçılar akşam yemeğini hazırladı.", "The cooks prepared dinner."], ["Güneş tepelerin arkasında batıyordu.", "The sun set behind the hills."], ["Ayşe bahçeye tohum ekti.", "Ayşe planted seeds in the garden."], ["Tekne okyanusta yelken açtı.", "The boat sailed across the ocean."], ["Müzisyenler enstrüman çaldı.", "The musicians played instruments."], ["Buz sıcakta eridi.", "The ice melted in the heat."], ["Elif partide dans etti.", "Elif danced at the party."], ["Yıldızlar gece parlıyordu.", "The stars shone at night."], ["Tomás nehirde balık tuttu.", "Thomas fished in the river."], ["Çimen alanda yeşil büyüyordu.", "The grass grew green in the field."], ["Sanatçılar resim yaptı.", "The artists painted pictures."], ["Saat gece yarısını vurdu.", "The clock struck midnight."], ["İsabel şal örüyordu.", "Isabel knitted a scarf."], ["Uçak gökyüzünde yüksek uçtu.", "The plane flew high in the sky."], ["Bahçıvanlar bitkilere baktı.", "The gardeners cared for the plants."], ["Ateş kamp ateşinde yanıyordu.", "The fire burned in the campfire."], ["Paula parkta koşuyordu.", "Paula ran in the park."], ["Dalgalar sahile vuruyordu.", "The waves broke on the beach."], ["Diego ev inşa etti.", "Diego built a house."], ["Sis vadıyı kapladı.", "The fog covered the valley."], ["Yüzücüler havuzda yarıştı.", "The swimmers competed in the pool."], ["Rüzgar ağaçlar arasında ıslık çalıyordu.", "The wind whistled through the trees."], ["Sara çocuklarına hikayeler okudu.", "Sara read stories to her children."], ["Köprü geniş nehri geçiyordu.", "The bridge crossed the wide river."], ["Dansçılar vücutlarını hareket ettirdi.", "The dancers moved their bodies."], ["Yağmur toprağı ıslattı.", "The rain wet the earth."]]
+        },
+        Tamil: {
+            code: 'ta-IN',
+            level1: [["வணக்கம்", "Hello"], ["நன்றி", "Thank you"], ["தண்ணீர்", "Water"], ["நண்பர்", "Friend"], ["ரொட்டி", "Bread"], ["பூனை", "Cat"], ["நாய்", "Dog"], ["வீடு", "House"], ["புத்தகம்", "Book"], ["வானம்", "Sky"], ["ஒன்று", "One"], ["இரண்டு", "Two"], ["மூன்று", "Three"], ["நான்கு", "Four"], ["ஐந்து", "Five"], ["சிவப்பு", "Red"], ["நீலம்", "Blue"], ["பச்சை", "Green"], ["மஞ்சள்", "Yellow"], ["கருப்பு", "Black"], ["தந்தை", "Father"], ["தாய்", "Mother"], ["மகன்", "Son"], ["மகள்", "Daughter"], ["சகோதரர்", "Brother"], ["சகோதரி", "Sister"], ["தாத்தா", "Grandfather"], ["பாட்டி", "Grandmother"], ["மாமா", "Uncle"], ["அத்தை", "Aunt"], ["உறவினர்", "Cousin"], ["கார்", "Car"], ["விமானம்", "Plane"], ["ரயில்", "Train"], ["படகு", "Boat"], ["மிதிவண்டி", "Bike"], ["மரம்", "Tree"], ["பூ", "Flower"], ["மலை", "Mountain"], ["ஆறு", "River"], ["குளம்", "Lake"], ["கடற்கரை", "Beach"], ["நகரம்", "City"], ["கிராமம்", "Village"], ["தெரு", "Street"], ["பள்ளி", "School"], ["மருத்துவமனை", "Hospital"], ["கடை", "Store"], ["உணவகம்", "Restaurant"], ["காப்பி", "Coffee"], ["தேநீர்", "Tea"]],
+            level2: [["எப்படி இருக்கிறீர்கள்?", "How are you?"], ["உங்களுக்கு எத்தனை வயது?", "How old are you?"], ["நீங்கள் எங்கு வசிக்கிறீர்கள்?", "Where do you live?"], ["எனது பெயர் ராம்", "My name is Ram"], ["நீங்கள் தமிழ் பேசுகிறீர்களா?", "Do you speak Tamil?"], ["இன்று வானிலை நன்றாக இருக்கிறது", "It's nice weather today"], ["நான் இசையை விரும்புகிறேன்", "I love music"], ["நீங்கள் என்ன செய்கிறீர்கள்?", "What do you do?"], ["நான் சோர்வாக இருக்கிறேன்", "I am tired"], ["பார்க்கிற்கு செல்வோம்", "Let's go to the park"], ["எத்தனை மணி?", "What time is it?"], ["எனக்கு பசி", "I am hungry"], ["நீங்கள் நடனம் செய்ய விரும்புகிறீர்களா?", "Do you like to dance?"], ["நான் ஒரு அலுவலகத்தில் வேலை செய்கிறேன்", "I work in an office"], ["உங்களுக்கு சகோதரர்கள் இருக்கிறார்களா?", "Do you have siblings?"], ["நான் ஆங்கிலம் கற்கிறேன்", "I study English"], ["நீங்கள் எந்த இசையை கேட்கிறீர்கள்?", "What music do you listen to?"], ["நான் ஜிம்மிற்கு செல்கிறேன்", "I go to the gym"], ["உங்கள் பிடித்த நிறம் என்ன?", "What is your favorite color?"], ["நான் சமைக்க விரும்புகிறேன்", "I like to cook"], ["நீங்கள் எங்கு ஷாப்பிங் செய்கிறீர்கள்?", "Where do you shop?"], ["நான் மகிழ்ச்சியாக இருக்கிறேன்", "I am happy"], ["உங்கள் ஓய்வு நேரத்தில் என்ன செய்கிறீர்கள்?", "What do you do in your free time?"], ["நான் புத்தகங்கள் படிக்கிறேன்", "I read books"], ["உங்களுக்கு செல்லப்பிராணிகள் இருக்கின்றனவா?", "Do you have pets?"], ["எனக்கு ஒரு நாய் இருக்கிறது", "I have a dog"], ["உங்கள் பிடித்த உணவு என்ன?", "What is your favorite food?"], ["சினிமாவிற்கு செல்வோம்", "Let's go to the cinema"], ["குளிர்", "It's cold"], ["நீங்கள் எங்கு பிறந்தீர்கள்?", "Where were you born?"], ["நான் கணிதம் கற்கிறேன்", "I study mathematics"], ["நான் பயணம் செய்ய விரும்புகிறேன்", "I like to travel"], ["நீங்கள் எந்த விளையாட்டை விளையாடுகிறீர்கள்?", "What sport do you play?"], ["நான் கடுமையாக வேலை செய்கிறேன்", "I work hard"], ["இது எவ்வளவு செலவாகும்?", "How much does it cost?"], ["நான் நோயாளியாக இருக்கிறேன்", "I am sick"], ["நூலகம் எங்கு?", "Where is the library?"], ["நான் நீந்த விரும்புகிறேன்", "I like to swim"], ["நீங்கள் என்ன நினைக்கிறீர்கள்?", "What do you think?"], ["நான் காப்பி குடிக்கிறேன்", "I drink coffee"], ["நீங்கள் தேநீர் விரும்புகிறீர்களா?", "Do you like tea?"], ["இது ஒரு அழகான நாள்", "It's a beautiful day"], ["நான் பள்ளிக்கு செல்கிறேன்", "I go to school"], ["உங்களுக்கு குழந்தைகள் இருக்கிறார்களா?", "Do you have children?"]],
+            level3: [["ஒரு காலத்தில் ஒரு பெரிய நகரத்தில் வாழும் ஒரு சிறுவன் இருந்தான்.", "Once upon a time there was a boy who lived in a big city."], ["ஒரு சிறிய கிராமத்தில் ஒரு மகிழ்ச்சியான குடும்பம் வாழ்ந்தது.", "In a small village there lived a happy family."], ["சூரியன் நீல வானத்தில் ஒளிர்ந்தது.", "The sun shone in the blue sky."], ["மரியா ஒவ்வொரு நாளும் பார்க்கில் நடந்தாள்.", "Maria walked in the park every day."], ["கருப்பு பூனை மேசையில் குதித்தது.", "The black cat jumped on the table."], ["அகமது ஒவ்வொரு நாளும் தொழிற்சாலையில் வேலை செய்தான்.", "Ahmet worked in a factory every day."], ["மழை இலைகளில் மென்மையாக விழுந்தது.", "The rain fell softly on the leaves."], ["குழந்தைகள் தோட்டத்தில் விளையாடினர்.", "The children played in the garden."], ["நாய் இரவில் உரத்த குரலில் குரைத்தது.", "The dog barked loudly at night."], ["ஆனா ஒரு ஆர்வமான புத்தகத்தை படித்தாள்.", "Ana read an interesting book."], ["ஆறு பள்ளத்தாக்கில் அமைதியாக ஓடியது.", "The river flowed calmly through the valley."], ["பறவைகள் மரங்களில் பாடின.", "The birds sang in the trees."], ["மெஹ்மெட் சுவையான உணவை சமைத்தான்.", "Mehmet cooked delicious food."], ["நிலவு இரவு வானத்தில் ஒளிர்ந்தது.", "The moon shone in the night sky."], ["நண்பர்கள் இரவு உணவுக்கு ஒன்று கூடினர்.", "The friends gathered for dinner."], ["காற்று மலையில் வலிமையாக வீசியது.", "The wind blew strongly on the mountain."], ["பாட்டி அழகான ஓவியங்களை வரைந்தாள்.", "Fatma drew beautiful paintings."], ["கடல் அந்த காலையில் அமைதியாக இருந்தது.", "The sea was calm that morning."], ["மாணவர்கள் நூலகத்தில் படித்தனர்.", "The students studied in the library."], ["நெருப்பு சிம்னியில் மறுமொழியிட்டது.", "The fire crackled in the fireplace."], ["அலி குளத்தில் நீந்தினான்.", "Ali swam in the pool."], ["பூக்கள் வசந்தத்தில் மலர்ந்தன.", "The flowers bloomed in spring."], ["ரயில் நிலையத்திற்கு வந்தது.", "The train arrived at the station."], ["ஜெய்னப் மகிழ்ச்சியான பாடல்களை பாடினாள்.", "Zeynep sang happy songs."], ["காடு விலங்குகளால் நிறைந்திருந்தது.", "The forest was full of animals."], ["ஹசன் தனது நண்பர்களுக்கு கடிதம் எழுதினான்.", "Hasan wrote letters to his friends."], ["பனி குளிர்காலத்தில் வெள்ளையாக விழுந்தது.", "The snow fell white in winter."], ["சமையல்காரர்கள் இரவு உணவை தயாரித்தனர்.", "The cooks prepared dinner."], ["சூரியன் மலைகளின் பின்னால் மறைந்தது.", "The sun set behind the hills."], ["ஆனா தோட்டத்தில் விதைகளை நட்டாள்.", "Ayşe planted seeds in the garden."], ["படகு கடலில் பயணித்தது.", "The boat sailed across the ocean."], ["இசைக்கலைஞர்கள் கருவிகளை வாசித்தனர்.", "The musicians played instruments."], ["பனி வெப்பத்தில் உருகியது.", "The ice melted in the heat."], ["எலிஃப் விருந்தில் நடனமாடினாள்.", "Elif danced at the party."], ["நட்சத்திரங்கள் இரவில் ஒளிர்ந்தன.", "The stars shone at night."], ["தோமாஸ் ஆறில் மீன் பிடித்தான்.", "Thomas fished in the river."], ["புல் வயலில் பச்சையாக வளர்ந்தது.", "The grass grew green in the field."], ["கலைஞர்கள் ஓவியங்களை வரைந்தனர்.", "The artists painted pictures."], ["கடிகாரம் நள்ளிரவை அடித்தது.", "The clock struck midnight."], ["இசபெல் ஒரு ஸ்கார்ப் நெய்தாள்.", "Isabel knitted a scarf."], ["விமானம் வானத்தில் உயர்ந்து பறந்தது.", "The plane flew high in the sky."], ["தோட்டக்காரர்கள் தாவரங்களை பராமரித்தனர்.", "The gardeners cared for the plants."], ["நெருப்பு முகாம்தீயில் எரிந்தது.", "The fire burned in the campfire."], ["பாலா பார்க்கில் ஓடினாள்.", "Paula ran in the park."], ["அலைகள் கடற்கரையில் உடைந்தன.", "The waves broke on the beach."], ["டியேகோ ஒரு வீடு கட்டினான்.", "Diego built a house."], ["மூடுபனி பள்ளத்தாக்கை மூடியது.", "The fog covered the valley."], ["நீச்சல் வீரர்கள் குளத்தில் போட்டியிட்டனர்.", "The swimmers competed in the pool."], ["காற்று மரங்களுக்கு இடையே சீட்டியடித்தது.", "The wind whistled through the trees."], ["சாரா தனது குழந்தைகளுக்கு கதைகளை படித்தாள்.", "Sara read stories to her children."], ["பாலம் அகலமான ஆறை கடந்தது.", "The bridge crossed the wide river."], ["நடனக் கலைஞர்கள் தங்கள் உடல்களை அசைத்தனர்.", "The dancers moved their bodies."], ["மழை தரையை ஈரப்படுத்தியது.", "The rain wet the earth."]]
+        },
+        Hindi: {
+            code: 'hi',
+            level1: [["नमस्ते", "Hello"], ["धन्यवाद", "Thank you"], ["पानी", "Water"], ["दोस्त", "Friend"], ["रोटी", "Bread"], ["बिल्ली", "Cat"], ["कुत्ता", "Dog"], ["घर", "House"], ["किताब", "Book"], ["आकाश", "Sky"], ["एक", "One"], ["दो", "Two"], ["तीन", "Three"], ["चार", "Four"], ["पाँच", "Five"], ["लाल", "Red"], ["नीला", "Blue"], ["हरा", "Green"], ["पीला", "Yellow"], ["काला", "Black"], ["पिता", "Father"], ["माता", "Mother"], ["बेटा", "Son"], ["बेटी", "Daughter"], ["भाई", "Brother"], ["बहन", "Sister"], ["दादा", "Grandfather"], ["दादी", "Grandmother"], ["चाचा", "Uncle"], ["चाची", "Aunt"], ["कजिन", "Cousin"], ["कार", "Car"], ["हवाई जहाज", "Plane"], ["रेलगाड़ी", "Train"], ["नाव", "Boat"], ["साइकिल", "Bike"], ["पेड़", "Tree"], ["फूल", "Flower"], ["पहाड़", "Mountain"], ["नदी", "River"], ["झील", "Lake"], ["समुद्र तट", "Beach"], ["शहर", "City"], ["गाँव", "Village"], ["सड़क", "Street"], ["स्कूल", "School"], ["अस्पताल", "Hospital"], ["दुकान", "Store"], ["रेस्तराँ", "Restaurant"], ["कॉफी", "Coffee"], ["चाय", "Tea"]],
+            level2: [["कैसे हैं आप?", "How are you?"], ["मुझे भूख लगी है", "I am hungry"], ["मुझे संगीत पसंद है", "I like music"], ["शौचालय कहाँ है?", "Where is the bathroom?"], ["बहुत ख़ुशी हुई", "Nice to meet you"], ["कितने बजे हैं?", "What time is it?"], ["मेरा नाम जॉन है", "My name is John"], ["आप कहाँ से हैं?", "Where are you from?"], ["मैं हिंदी बोलता हूँ", "I speak Hindi"], ["आपकी उम्र क्या है?", "How old are you?"], ["मैं थक गया हूँ", "I am tired"], ["आप क्या खाना चाहते हैं?", "What do you want to eat?"], ["हम पार्क चलें", "Let's go to the park"], ["आज गर्मी है", "It's hot today"], ["मुझे नाचना पसंद है", "I like to dance"], ["आप कहाँ रहते हैं?", "Where do you live?"], ["मैं एक कार्यालय में काम करता हूँ", "I work in an office"], ["आपके भाई बहन हैं?", "Do you have siblings?"], ["मैं अंग्रेजी सीख रहा हूँ", "I study English"], ["आप कौन सा संगीत सुनते हैं?", "What music do you listen to?"], ["मैं जिम जाता हूँ", "I go to the gym"], ["आपका पसंदीदा रंग क्या है?", "What is your favorite color?"], ["मुझे खाना बनाना पसंद है", "I like to cook"], ["आप कहाँ खरीदारी करते हैं?", "Where do you shop?"], ["मैं खुश हूँ", "I am happy"], ["आप अपने खाली समय में क्या करते हैं?", "What do you do in your free time?"], ["मैं किताबें पढ़ता हूँ", "I read books"], ["आपके पालतू जानवर हैं?", "Do you have pets?"], ["मेरे पास एक कुत्ता है", "I have a dog"], ["आपका पसंदीदा खाना क्या है?", "What is your favorite food?"], ["हम सिनेमा चलें", "Let's go to the cinema"], ["ठंड है", "It's cold"], ["आप कहाँ पैदा हुए?", "Where were you born?"], ["मैं गणित सीख रहा हूँ", "I study mathematics"], ["मुझे यात्रा करना पसंद है", "I like to travel"], ["आप कौन सा खेल खेलते हैं?", "What sport do you play?"], ["मैं मेहनत से काम करता हूँ", "I work hard"], ["यह कितना महँगा है?", "How much does it cost?"], ["मैं बीमार हूँ", "I am sick"], ["पुस्तकालय कहाँ है?", "Where is the library?"], ["मुझे तैरना पसंद है", "I like to swim"], ["आप क्या सोचते हैं?", "What do you think?"], ["मैं कॉफी पीता हूँ", "I drink coffee"], ["आप चाय पसंद करते हैं?", "Do you like tea?"], ["यह एक सुंदर दिन है", "It's a beautiful day"], ["मैं स्कूल जाता हूँ", "I go to school"], ["आपके बच्चे हैं?", "Do you have children?"]],
+            level3: [["एक समय एक लड़का था जो एक बड़े शहर में रहता था।", "Once upon a time there was a boy who lived in a big city."], ["एक छोटे गाँव में एक खुश परिवार रहता था।", "In a small village there lived a happy family."], ["सूरज नीले आसमान में चमक रहा था।", "The sun shone in the blue sky."], ["मरिया हर दिन पार्क में टहलती थी।", "Maria walked in the park every day."], ["काली बिल्ली मेज पर कूद गई।", "The black cat jumped on the table."], ["जॉन हर दिन एक फैक्टरी में काम करता था।", "John worked in a factory every day."], ["बारिश पत्तियों पर धीरे धीरे गिर रही थी।", "The rain fell softly on the leaves."], ["बच्चे बगीचे में खेल रहे थे।", "The children played in the garden."], ["कुत्ता रात को जोर से भौंक रहा था।", "The dog barked loudly at night."], ["अना एक दिलचस्प किताब पढ़ रही थी।", "Ana read an interesting book."], ["नदी घाटी में शांत बह रही थी।", "The river flowed calmly through the valley."], ["पक्षी पेड़ों पर गा रहे थे।", "The birds sang in the trees."], ["पीटर स्वादिष्ट खाना पका रहा था।", "Peter cooked delicious food."], ["चाँद रात के आसमान में चमक रहा था।", "The moon shone in the night sky."], ["दोस्त रात के खाने के लिए इकट्ठे हुए।", "The friends gathered for dinner."], ["हवा पर्वत पर जोर से बह रही थी।", "The wind blew strongly on the mountain."], ["सोफिया सुंदर चित्र बना रही थी।", "Sofia drew beautiful paintings."], ["समुद्र उस सुबह शांत था।", "The sea was calm that morning."], ["छात्र पुस्तकालय में पढ़ रहे थे।", "The students studied in the library."], ["आग चिमनी में चटक रही थी।", "The fire crackled in the fireplace."], ["कार्ल पूल में तैर रहा था।", "Karl swam in the pool."], ["फूल वसंत में खिले।", "The flowers bloomed in spring."], ["रेलगाड़ी स्टेशन पर पहुँची।", "The train arrived at the station."], ["लूसिया खुश गाने गा रही थी।", "Lucia sang happy songs."], ["जंगल जानवरों से भरा था।", "The forest was full of animals."], ["माइकल अपने दोस्तों को पत्र लिख रहा था।", "Michael wrote letters to his friends."], ["बर्फ सर्दियों में सफेद गिर रही थी।", "The snow fell white in winter."], ["रसोइये रात का खाना बना रहे थे।", "The cooks prepared dinner."], ["सूरज पहाड़ियों के पीछे डूब गया।", "The sun set behind the hills."], ["रोजा बगीचे में बीज बो रही थी।", "Rosa planted seeds in the garden."], ["नाव महासागर में जा रही थी।", "The boat sailed across the ocean."], ["संगीतकार वाद्ययंत्र बजा रहे थे।", "The musicians played instruments."], ["बर्फ गर्मी में पिघल गई।", "The ice melted in the heat."], ["एलेना पार्टी में नाच रही थी।", "Elena danced at the party."], ["तारे रात में चमक रहे थे।", "The stars shone at night."], ["थॉमस नदी में मछली पकड़ रहा था।", "Thomas fished in the river."], ["घास मैदान में हरी उग रही थी।", "The grass grew green in the field."], ["कलाकार तस्वीरें बना रहे थे।", "The artists painted pictures."], ["घड़ी आधी रात को बजी।", "The clock struck midnight."], ["इसाबेल एक स्कार्फ बुन रही थी।", "Isabel knitted a scarf."], ["विमान आसमान में ऊँचा उड़ा।", "The plane flew high in the sky."], ["माली पौधों की देखभाल कर रहे थे।", "The gardeners cared for the plants."], ["आग कैंपफायर में जल रही थी।", "The fire burned in the campfire."], ["पौला पार्क में दौड़ रही थी।", "Paula ran in the park."], ["लहरें समुद्र तट पर टूट रही थीं।", "The waves broke on the beach."], ["डिएगो एक घर बना रहा था।", "Diego built a house."], ["कोहरा घाटी को ढक रहा था।", "The fog covered the valley."], ["तैराक पूल में प्रतिस्पर्धा कर रहे थे।", "The swimmers competed in the pool."], ["हवा पेड़ों के बीच सीटी बज रही थी।", "The wind whistled through the trees."], ["सारा अपने बच्चों को कहानियाँ पढ़ रही थी।", "Sara read stories to her children."], ["पुल चौड़ी नदी को पार कर रहा था।", "The bridge crossed the wide river."], ["नर्तक अपने शरीर हिला रहे थे।", "The dancers moved their bodies."], ["बारिश धरती को गीला कर रही थी।", "The rain wet the earth."]]
+        },
+        Chinese: {
+            code: 'zh',
+            level1: [["你好", "Hello"], ["谢谢", "Thank you"], ["水", "Water"], ["朋友", "Friend"], ["面包", "Bread"], ["猫", "Cat"], ["狗", "Dog"], ["房子", "House"], ["书", "Book"], ["天空", "Sky"], ["一", "One"], ["二", "Two"], ["三", "Three"], ["四", "Four"], ["五", "Five"], ["红色", "Red"], ["蓝色", "Blue"], ["绿色", "Green"], ["黄色", "Yellow"], ["黑色", "Black"], ["父亲", "Father"], ["母亲", "Mother"], ["儿子", "Son"], ["女儿", "Daughter"], ["哥哥", "Brother"], ["姐姐", "Sister"], ["爷爷", "Grandfather"], ["奶奶", "Grandmother"], ["叔叔", "Uncle"], ["阿姨", "Aunt"], ["表弟", "Cousin"], ["汽车", "Car"], ["飞机", "Plane"], ["火车", "Train"], ["船", "Boat"], ["自行车", "Bike"], ["树", "Tree"], ["花", "Flower"], ["山", "Mountain"], ["河", "River"], ["湖", "Lake"], ["海滩", "Beach"], ["城市", "City"], ["村庄", "Village"], ["街道", "Street"], ["学校", "School"], ["医院", "Hospital"], ["商店", "Store"], ["餐厅", "Restaurant"], ["咖啡", "Coffee"], ["茶", "Tea"]],
+            level2: [["你好吗？", "How are you?"], ["我饿了", "I am hungry"], ["我喜欢音乐", "I like music"], ["洗手间在哪里？", "Where is the bathroom?"], ["很高兴见到你", "Nice to meet you"], ["现在几点了？", "What time is it?"], ["我叫约翰", "My name is John"], ["你从哪里来？", "Where are you from?"], ["我会说中文", "I speak Chinese"], ["你多大了？", "How old are you?"], ["我累了", "I am tired"], ["你想吃什么？", "What do you want to eat?"], ["我们去公园吧", "Let's go to the park"], ["今天很热", "It's hot today"], ["我喜欢跳舞", "I like to dance"], ["你住在哪里？", "Where do you live?"], ["我在办公室工作", "I work in an office"], ["你有兄弟姐妹吗？", "Do you have siblings?"], ["我在学英语", "I study English"], ["你听什么音乐？", "What music do you listen to?"], ["我去健身房", "I go to the gym"], ["你最喜欢的颜色是什么？", "What is your favorite color?"], ["我喜欢做饭", "I like to cook"], ["你在哪里购物？", "Where do you shop?"], ["我很开心", "I am happy"], ["你空闲时间做什么？", "What do you do in your free time?"], ["我读书", "I read books"], ["你有宠物吗？", "Do you have pets?"], ["我有一只狗", "I have a dog"], ["你最喜欢的食物是什么？", "What is your favorite food?"], ["我们去看电影吧", "Let's go to the cinema"], ["很冷", "It's cold"], ["你出生在哪里？", "Where were you born?"], ["我在学数学", "I study mathematics"], ["我喜欢旅行", "I like to travel"], ["你玩什么运动？", "What sport do you play?"], ["我努力工作", "I work hard"], ["这个多少钱？", "How much does it cost?"], ["我生病了", "I am sick"], ["图书馆在哪里？", "Where is the library?"], ["我喜欢游泳", "I like to swim"], ["你怎么想？", "What do you think?"], ["我喝咖啡", "I drink coffee"], ["你喜欢茶吗？", "Do you like tea?"], ["今天是个美好的一天", "It's a beautiful day"], ["我上学", "I go to school"], ["你有孩子吗？", "Do you have children?"]],
+            level3: [["从前有一个男孩，他住在一个大城市里。", "Once upon a time there was a boy who lived in a big city."], ["在一个小村庄里住着一个幸福的家庭。", "In a small village there lived a happy family."], ["太阳在蓝色的天空里闪耀。", "The sun shone in the blue sky."], ["玛利亚每天在公园散步。", "Maria walked in the park every day."], ["黑猫跳到了桌子上。", "The black cat jumped on the table."], ["约翰每天在工厂工作。", "John worked in a factory every day."], ["雨轻轻地落在叶子上。", "The rain fell softly on the leaves."], ["孩子们在花园里玩耍。", "The children played in the garden."], ["狗在夜里大声吠叫。", "The dog barked loudly at night."], ["安娜读着一本有趣的书。", "Anna read an interesting book."], ["河平静地流过山谷。", "The river flowed calmly through the valley."], ["鸟儿在树上歌唱。", "The birds sang in the trees."], ["彼得做着美味的食物。", "Peter cooked delicious food."], ["月亮在夜空中闪耀。", "The moon shone in the night sky."], ["朋友们聚在一起吃饭。", "The friends gathered for dinner."], ["风在山上强烈吹拂。", "The wind blew strongly on the mountain."], ["索菲娅画着美丽的画。", "Sofia drew beautiful paintings."], ["那天早上海很平静。", "The sea was calm that morning."], ["学生们在图书馆学习。", "The students studied in the library."], ["火在壁炉里噼啪作响。", "The fire crackled in the fireplace."], ["卡尔在游泳池游泳。", "Karl swam in the pool."], ["花在春天绽放。", "The flowers bloomed in spring."], ["火车到达了车站。", "The train arrived at the station."], ["露西亚唱着快乐的歌曲。", "Lucia sang happy songs."], ["森林里充满了动物。", "The forest was full of animals."], ["迈克尔给朋友写信。", "Michael wrote letters to his friends."], ["雪在冬天白白落下。", "The snow fell white in winter."], ["厨师们准备晚餐。", "The cooks prepared dinner."], ["太阳落在了山丘后面。", "The sun set behind the hills."], ["罗莎在花园里播种。", "Rosa planted seeds in the garden."], ["船在大洋上航行。", "The boat sailed across the ocean."], ["音乐家演奏乐器。", "The musicians played instruments."], ["冰在热中融化。", "The ice melted in the heat."], ["埃琳娜在派对上跳舞。", "Elena danced at the party."], ["星星在夜里闪耀。", "The stars shone at night."], ["托马斯在河里钓鱼。", "Thomas fished in the river."], ["草在田野里绿绿生长。", "The grass grew green in the field."], ["艺术家画画。", "The artists painted pictures."], ["钟敲响了午夜。", "The clock struck midnight."], ["伊莎贝尔织一条围巾。", "Isabel knitted a scarf."], ["飞机在天空中高飞。", "The plane flew high in the sky."], ["园丁照顾植物。", "The gardeners cared for the plants."], ["火在篝火中燃烧。", "The fire burned in the campfire."], ["保拉在公园跑步。", "Paula ran in the park."], ["波浪撞击海滩。", "The waves broke on the beach."], ["迭戈建一座房子。", "Diego built a house."], ["雾笼罩了山谷。", "The fog covered the valley."], ["游泳者在游泳池比赛。", "The swimmers competed in the pool."], ["风在树间呼啸。", "The wind whistled through the trees."], ["萨拉给孩子们读故事。", "Sara read stories to her children."], ["桥跨越宽阔的河流。", "The bridge crossed the wide river."], ["舞者移动他们的身体。", "The dancers moved their bodies."], ["雨弄湿了大地。", "The rain wet the earth."]]
+        },
+        Japanese: {
+            code: 'ja',
+            level1: [["こんにちは", "Hello"], ["ありがとう", "Thank you"], ["水", "Water"], ["友達", "Friend"], ["パン", "Bread"], ["猫", "Cat"], ["犬", "Dog"], ["家", "House"], ["本", "Book"], ["空", "Sky"], ["一", "One"], ["二", "Two"], ["三", "Three"], ["四", "Four"], ["五", "Five"], ["赤", "Red"], ["青", "Blue"], ["緑", "Green"], ["黄", "Yellow"], ["黒", "Black"], ["父", "Father"], ["母", "Mother"], ["息子", "Son"], ["娘", "Daughter"], ["兄", "Brother"], ["姉", "Sister"], ["祖父", "Grandfather"], ["祖母", "Grandmother"], ["叔父", "Uncle"], ["叔母", "Aunt"], ["いとこ", "Cousin"], ["車", "Car"], ["飛行機", "Plane"], ["電車", "Train"], ["船", "Boat"], ["自転車", "Bike"], ["木", "Tree"], ["花", "Flower"], ["山", "Mountain"], ["川", "River"], ["湖", "Lake"], ["ビーチ", "Beach"], ["都市", "City"], ["村", "Village"], ["通り", "Street"], ["学校", "School"], ["病院", "Hospital"], ["店", "Store"], ["レストラン", "Restaurant"], ["コーヒー", "Coffee"], ["お茶", "Tea"]],
+            level2: [["お元気ですか？", "How are you?"], ["お腹が空きました", "I am hungry"], ["音楽が好きです", "I like music"], ["トイレはどこですか？", "Where is the bathroom?"], ["お会いできて嬉しいです", "Nice to meet you"], ["今何時ですか？", "What time is it?"], ["私はジョンと申します", "My name is John"], ["どちらから来ましたか？", "Where are you from?"], ["日本語を話せます", "I speak Japanese"], ["おいくつですか？", "How old are you?"], ["疲れました", "I am tired"], ["何を食べたいですか？", "What do you want to eat?"], ["公園に行きましょう", "Let's go to the park"], ["今日は暑いです", "It's hot today"], ["ダンスが好きです", "I like to dance"], ["どこに住んでいますか？", "Where do you live?"], ["オフィスで働いています", "I work in an office"], ["兄弟がいますか？", "Do you have siblings?"], ["英語を勉強しています", "I study English"], ["どんな音楽を聞きますか？", "What music do you listen to?"], ["ジムに行きます", "I go to the gym"], ["好きな色は何ですか？", "What is your favorite color?"], ["料理が好きです", "I like to cook"], ["どこで買い物をしますか？", "Where do you shop?"], ["幸せです", "I am happy"], ["暇な時間に何をしますか？", "What do you do in your free time?"], ["本を読みます", "I read books"], ["ペットがいますか？", "Do you have pets?"], ["犬がいます", "I have a dog"], ["好きな食べ物は何ですか？", "What is your favorite food?"], ["映画に行きましょう", "Let's go to the cinema"], ["寒いです", "It's cold"], ["どこで生まれましたか？", "Where were you born?"], ["数学を勉強しています", "I study mathematics"], ["旅行が好きです", "I like to travel"], ["どんなスポーツをしますか？", "What sport do you play?"], ["一生懸命働きます", "I work hard"], ["いくらですか？", "How much does it cost?"], ["病気です", "I am sick"], ["図書館はどこですか？", "Where is the library?"], ["泳ぎが好きです", "I like to swim"], ["どう思いますか？", "What do you think?"], ["コーヒーを飲みます", "I drink coffee"], ["お茶が好きですか？", "Do you like tea?"], ["今日は素敵な日です", "It's a beautiful day"], ["学校に行きます", "I go to school"], ["子供がいますか？", "Do you have children?"]],
+            level3: [["昔、ある男の子が大きな街に住んでいました。", "Once upon a time there was a boy who lived in a big city."], ["小さな村に幸せな家族が住んでいました。", "In a small village there lived a happy family."], ["太陽が青い空に輝いていました。", "The sun shone in the blue sky."], ["マリアは毎日公園を散歩していました。", "Maria walked in the park every day."], ["黒い猫がテーブルの上に飛び乗りました。", "The black cat jumped on the table."], ["ジョンは毎日工場で働いていました。", "John worked in a factory every day."], ["雨が葉の上に優しく降っていました。", "The rain fell softly on the leaves."], ["子供たちが庭で遊んでいました。", "The children played in the garden."], ["犬が夜に大声で吠えていました。", "The dog barked loudly at night."], ["アンナは面白い本を読んでいました。", "Anna read an interesting book."], ["川が谷を静かに流れていました。", "The river flowed calmly through the valley."], ["鳥たちが木の上で歌っていました。", "The birds sang in the trees."], ["ピーターは美味しい食べ物を作っていました。", "Peter cooked delicious food."], ["月が夜空に輝いていました。", "The moon shone in the night sky."], ["友達たちが夕食のために集まりました。", "The friends gathered for dinner."], ["風が山で強く吹いていました。", "The wind blew strongly on the mountain."], ["ソフィアは美しい絵を描いていました。", "Sofia drew beautiful paintings."], ["その朝、海は穏やかでした。", "The sea was calm that morning."], ["学生たちが図書館で勉強していました。", "The students studied in the library."], ["火が暖炉でパチパチと音を立てていました。", "The fire crackled in the fireplace."], ["カールはプールで泳いでいました。", "Karl swam in the pool."], ["花が春に咲きました。", "The flowers bloomed in spring."], ["電車が駅に到着しました。", "The train arrived at the station."], ["ルシアは幸せな歌を歌っていました。", "Lucia sang happy songs."], ["森は動物でいっぱいでした。", "The forest was full of animals."], ["マイケルは友達に手紙を書いていました。", "Michael wrote letters to his friends."], ["雪が冬に白く降っていました。", "The snow fell white in winter."], ["料理人たちが夕食を準備していました。", "The cooks prepared dinner."], ["太陽が丘の後ろに沈みました。", "The sun set behind the hills."], ["ローザは庭に種を植えていました。", "Rosa planted seeds in the garden."], ["船が大洋を航行しました。", "The boat sailed across the ocean."], ["音楽家たちが楽器を演奏しました。", "The musicians played instruments."], ["氷が熱で溶けました。", "The ice melted in the heat."], ["エレナはパーティーで踊っていました。", "Elena danced at the party."], ["星が夜に輝いていました。", "The stars shone at night."], ["トーマスは川で魚を釣っていました。", "Thomas fished in the river."], ["草が野原で緑に育っていました。", "The grass grew green in the field."], ["芸術家たちが絵を描いていました。", "The artists painted pictures."], ["時計が真夜中を鳴らしました。", "The clock struck midnight."], ["イザベルはスカーフを編んでいました。", "Isabel knitted a scarf."], ["飛行機が空を高く飛んでいました。", "The plane flew high in the sky."], ["庭師たちが植物の世話をしていました。", "The gardeners cared for the plants."], ["火がキャンプファイヤーで燃えていました。", "The fire burned in the campfire."], ["ポーラは公園で走っていました。", "Paula ran in the park."], ["波が海岸に打ち寄せていました。", "The waves broke on the beach."], ["ディエゴは家を建てていました。", "Diego built a house."], ["霧が谷を覆っていました。", "The fog covered the valley."], ["スイマーたちがプールで競争していました。", "The swimmers competed in the pool."], ["風が木々の間で笛を吹いていました。", "The wind whistled through the trees."], ["サラは子供たちに物語を読んでいました。", "Sara read stories to her children."], ["橋が広い川を渡っていました。", "The bridge crossed the wide river."], ["ダンサーたちが体を動かしていました。", "The dancers moved their bodies."], ["雨が大地を濡らしていました。", "The rain wet the earth."]]
+        },
+        Korean: {
+            code: 'ko',
+            level1: [["안녕하세요", "Hello"], ["감사합니다", "Thank you"], ["물", "Water"], ["친구", "Friend"], ["빵", "Bread"], ["고양이", "Cat"], ["개", "Dog"], ["집", "House"], ["책", "Book"], ["하늘", "Sky"], ["하나", "One"], ["둘", "Two"], ["셋", "Three"], ["넷", "Four"], ["다섯", "Five"], ["빨강", "Red"], ["파랑", "Blue"], ["초록", "Green"], ["노랑", "Yellow"], ["검정", "Black"], ["아버지", "Father"], ["어머니", "Mother"], ["아들", "Son"], ["딸", "Daughter"], ["형", "Brother"], ["누나", "Sister"], ["할아버지", "Grandfather"], ["할머니", "Grandmother"], ["삼촌", "Uncle"], ["이모", "Aunt"], ["사촌", "Cousin"], ["자동차", "Car"], ["비행기", "Plane"], ["기차", "Train"], ["배", "Boat"], ["자전거", "Bike"], ["나무", "Tree"], ["꽃", "Flower"], ["산", "Mountain"], ["강", "River"], ["호수", "Lake"], ["해변", "Beach"], ["도시", "City"], ["마을", "Village"], ["거리", "Street"], ["학교", "School"], ["병원", "Hospital"], ["가게", "Store"], ["레스토랑", "Restaurant"], ["커피", "Coffee"], ["차", "Tea"]],
+            level2: [["어떻게 지내세요?", "How are you?"], ["배고파요", "I am hungry"], ["음악을 좋아해요", "I like music"], ["화장실이 어디예요?", "Where is the bathroom?"], ["만나서 반가워요", "Nice to meet you"], ["몇 시예요?", "What time is it?"], ["제 이름은 존이에요", "My name is John"], ["어디에서 왔어요?", "Where are you from?"], ["한국어를 할 수 있어요", "I speak Korean"], ["몇 살이에요?", "How old are you?"], ["피곤해요", "I am tired"], ["뭐 먹고 싶어요?", "What do you want to eat?"], ["공원에 가요", "Let's go to the park"], ["오늘 더워요", "It's hot today"], ["춤추는 걸 좋아해요", "I like to dance"], ["어디에 살아요?", "Where do you live?"], ["사무실에서 일해요", "I work in an office"], ["형제자매 있어요?", "Do you have siblings?"], ["영어를 공부해요", "I study English"], ["어떤 음악을 들어요?", "What music do you listen to?"], ["체육관에 가요", "I go to the gym"], ["좋아하는 색깔이 뭐예요?", "What is your favorite color?"], ["요리하는 걸 좋아해요", "I like to cook"], ["어디에서 쇼핑해요?", "Where do you shop?"], ["행복해요", "I am happy"], ["여가 시간에 뭐 해요?", "What do you do in your free time?"], ["책을 읽어요", "I read books"], ["애완동물 있어요?", "Do you have pets?"], ["개가 있어요", "I have a dog"], ["좋아하는 음식이 뭐예요?", "What is your favorite food?"], ["영화 보러 가요", "Let's go to the cinema"], ["추워요", "It's cold"], ["어디에서 태어났어요?", "Where were you born?"], ["수학을 공부해요", "I study mathematics"], ["여행하는 걸 좋아해요", "I like to travel"], ["어떤 스포츠를 해요?", "What sport do you play?"], ["열심히 일해요", "I work hard"], ["얼마예요?", "How much does it cost?"], ["아파요", "I am sick"], ["도서관이 어디예요?", "Where is the library?"], ["수영하는 걸 좋아해요", "I like to swim"], ["어떻게 생각해요?", "What do you think?"], ["커피를 마셔요", "I drink coffee"], ["차 좋아해요?", "Do you like tea?"], ["오늘은 아름다운 날이에요", "It's a beautiful day"], ["학교에 가요", "I go to school"], ["아이 있어요?", "Do you have children?"]],
+            level3: [["옛날에 큰 도시에 사는 소년이 있었어요.", "Once upon a time there was a boy who lived in a big city."], ["작은 마을에 행복한 가족이 살았어요.", "In a small village there lived a happy family."], ["태양이 푸른 하늘에 빛났어요.", "The sun shone in the blue sky."], ["마리아는 매일 공원을 산책했어요.", "Maria walked in the park every day."], ["검은 고양이가 테이블 위로 뛰었어요.", "The black cat jumped on the table."], ["존은 매일 공장에서 일했어요.", "John worked in a factory every day."], ["비가 잎사귀에 부드럽게 내렸어요.", "The rain fell softly on the leaves."], ["아이들이 정원에서 놀았어요.", "The children played in the garden."], ["개가 밤에 크게 짖었어요.", "The dog barked loudly at night."], ["안나는 재미있는 책을 읽었어요.", "Anna read an interesting book."], ["강이 계곡을 조용히 흘렀어요.", "The river flowed calmly through the valley."], ["새들이 나무 위에서 노래했어요.", "The birds sang in the trees."], ["피터는 맛있는 음식을 만들었어요.", "Peter cooked delicious food."], ["달이 밤하늘에 빛났어요.", "The moon shone in the night sky."], ["친구들이 저녁 식사를 위해 모였어요.", "The friends gathered for dinner."], ["바람이 산에서 세게 불었어요.", "The wind blew strongly on the mountain."], ["소피아는 아름다운 그림을 그렸어요.", "Sofia drew beautiful paintings."], ["그 아침 바다는 잔잔했어요.", "The sea was calm that morning."], ["학생들이 도서관에서 공부했어요.", "The students studied in the library."], ["불이 벽난로에서 탁탁 소리를 냈어요.", "The fire crackled in the fireplace."], ["칼은 수영장에서 수영했어요.", "Karl swam in the pool."], ["꽃이 봄에 피었어요.", "The flowers bloomed in spring."], ["기차가 역에 도착했어요.", "The train arrived at the station."], ["루시아는 행복한 노래를 불렀어요.", "Lucia sang happy songs."], ["숲은 동물로 가득했어요.", "The forest was full of animals."], ["마이클은 친구들에게 편지를 썼어요.", "Michael wrote letters to his friends."], ["눈이 겨울에 하얗게 내렸어요.", "The snow fell white in winter."], ["요리사들이 저녁을 준비했어요.", "The cooks prepared dinner."], ["태양이 언덕 뒤로 졌어요.", "The sun set behind the hills."], ["로자는 정원에 씨를 심었어요.", "Rosa planted seeds in the garden."], ["배가 대양을 항해했어요.", "The boat sailed across the ocean."], ["음악가들이 악기를 연주했어요.", "The musicians played instruments."], ["얼음이 더위에 녹았어요.", "The ice melted in the heat."], ["엘레나는 파티에서 춤췄어요.", "Elena danced at the party."], ["별이 밤에 빛났어요.", "The stars shone at night."], ["토마스는 강에서 물고기를 잡았어요.", "Thomas fished in the river."], ["풀이 들판에서 녹색으로 자랐어요.", "The grass grew green in the field."], ["예술가들이 그림을 그렸어요.", "The artists painted pictures."], ["시계가 자정을 쳤어요.", "The clock struck midnight."], ["이사벨은 스카프를 짰어요.", "Isabel knitted a scarf."], ["비행기가 하늘을 높이 날았어요.", "The plane flew high in the sky."], ["정원사들이 식물을 돌봤어요.", "The gardeners cared for the plants."], ["불이 캠프파이어에서 타고 있었어요.", "The fire burned in the campfire."], ["폴라는 공원에서 달렸어요.", "Paula ran in the park."], ["파도가 해변에 부딪혔어요.", "The waves broke on the beach."], ["디에고는 집을 지었어요.", "Diego built a house."], ["안개가 계곡을 덮었어요.", "The fog covered the valley."], ["수영자들이 수영장에서 경쟁했어요.", "The swimmers competed in the pool."], ["바람이 나무 사이로 휘파람을 불었어요.", "The wind whistled through the trees."], ["사라는 아이들에게 이야기를 읽어줬어요.", "Sara read stories to her children."], ["다리가 넓은 강을 건넜어요.", "The bridge crossed the wide river."], ["댄서들이 몸을 움직였어요.", "The dancers moved their bodies."], ["비가 땅을 적셨어요.", "The rain wet the earth."]]
+        }
+    }
+
+    let state = {
+        lang: 'Spanish',
+        level: 1,
+        index: 0,
+        xp: parseInt(localStorage.getItem('xp')) || 0,
+        streak: parseInt(localStorage.getItem('streak')) || 0,
+        isQuiz: false,
+        quizScore: 0,
+        unlockedLevels: [1]
+    };
+
+    // --- CORE LOGIC ---
+    function init() {
+        const grid = document.getElementById('languageGrid');
+        Object.keys(langData).forEach(l => {
+            const el = document.createElement('div');
+            el.className = 'card';
+            el.innerHTML = `<h3>${l}</h3>`;
+            el.onclick = () => selectLang(l);
+            grid.appendChild(el);
+        });
+        updateStats();
+        updateLevelButtons();
+    }
+
+    function selectLang(l) {
+        state.lang = l;
+        state.unlockedLevels = JSON.parse(localStorage.getItem(`unlockedLevels_${l}`)) || [1];
+        document.getElementById('learningTitle').innerText = l;
+        updateLevelButtons();
+        showPage('learningPage');
+    }
+
+    function updateLevelButtons() {
+        const levelButtons = document.querySelectorAll('.level-btn');
+        levelButtons.forEach((btn, index) => {
+            const level = index + 1;
+            if (state.unlockedLevels.includes(level)) {
+                btn.disabled = false;
+            } else {
+                btn.disabled = true;
+            }
+        });
+    }
+
+    function startLesson(lvl) {
+        state.level = lvl;
+        state.index = 0;
+        state.isQuiz = false;
+        updateCard();
+        showPage('learningPage');
+    }
+
+    function showPage(id) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+    }
+
+function updateCard() {
+    const data = langData[state.lang][`level${state.level}`];
+    console.log('updateCard called, lang:', state.lang, 'level:', state.level, 'index:', state.index, 'data length:', data.length);
+    if (!data[state.index]) {
+        console.log('No more cards, starting quiz');
+        startQuizMode();
+        return;
+    }
+    document.getElementById('cardFront').innerText = data[state.index][0]; // Foreign word
+    document.getElementById('cardBack').innerText = data[state.index][1]; // English meaning
+
+    // Reset flip state
+    document.getElementById('flashCard').classList.remove('flipped');
+
+    let progress = (state.index / data.length) * 100;
+    document.getElementById('progressFill').style.width = progress + "%";
+}
+
+    function flipCard() {
+        document.getElementById('flashCard').classList.toggle('flipped');
+    }
+
+    function nextCard() {
+        state.index++;
+        updateCard();
+    }
+
+    function startQuizMode() {
+        state.isQuiz = true;
+        state.index = 0;
+        state.quizLength = Math.min(20, langData[state.lang][`level${state.level}`].length);
+        setupQuiz();
+        showPage('quizPage');
+    }
+
+    function setupQuiz() {
+        const data = langData[state.lang][`level${state.level}`];
+        if (state.index >= data.length) {
+            completeLesson();
+            return;
+        }
+
+        const current = data[state.index];
+        document.getElementById('quizQuestion').innerText = `How do you say "${current[1]}" in ${state.lang}?`;
+        const optionsDiv = document.getElementById('quizOptions');
+        optionsDiv.innerHTML = '';
+        document.getElementById('nextQuizBtn').style.display = 'none';
+
+        // Generate 4 options
+        let options = [current[0]];
+        while(options.length < 4) {
+            let rand = data[Math.floor(Math.random()*data.length)][0];
+            if(!options.includes(rand)) options.push(rand);
+        }
+        options.sort(() => Math.random() - 0.5);
+
+        options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerText = opt;
+            btn.onclick = () => checkAnswer(btn, opt, current[0]);
+            optionsDiv.appendChild(btn);
+        });
+    }
+
+    function checkAnswer(btn, selected, correct) {
+        if (document.getElementById('nextQuizBtn').style.display === 'none') {
+            if (selected === correct) {
+                btn.classList.add('correct');
+                addXP(2);
+                state.quizScore++;
+            } else {
+                btn.classList.add('wrong');
+            }
+            document.getElementById('nextQuizBtn').style.display = 'block';
+            state.index++;
+        }
+    }
+
+    function completeLesson() {
+        const scorePercentage = (state.quizScore / langData[state.lang][`level${state.level}`].length) * 100;
+        if (scorePercentage >= 80) {
+            if (state.level === 1 && !state.unlockedLevels.includes(2)) {
+                state.unlockedLevels.push(2);
+            } else if (state.level === 2 && !state.unlockedLevels.includes(3)) {
+                state.unlockedLevels.push(3);
+            }
+            localStorage.setItem(`unlockedLevels_${state.lang}`, JSON.stringify(state.unlockedLevels));
+        }
+        document.getElementById('resultLanguage').innerText = state.lang;
+        document.getElementById('resultScore').innerText = scorePercentage.toFixed(0) + '%';
+        if (scorePercentage >= 80) {
+            document.getElementById('resultMessage').innerText = 'Congratulations! You unlocked the next level.';
+        } else {
+            document.getElementById('resultMessage').innerText = 'Good try! Try again to unlock the next level.';
+        }
+        addXP(15);
+        state.quizScore = 0;
+        showPage('resultsPage');
+    }
+
+    function addXP(amount) {
+        state.xp += amount;
+        localStorage.setItem('xp', state.xp);
+        updateStats();
+    }
+
+    function updateStats() {
+        document.getElementById('xp').innerText = state.xp;
+        document.getElementById('streak').innerText = state.streak;
+    }
+
+    function toggleDark() {
+        document.body.classList.toggle('dark');
+    }
+
+    function speakText() {
+        const text = document.getElementById('cardFront').innerText;
+        const msg = new SpeechSynthesisUtterance();
+        msg.text = text;
+        msg.lang = langData[state.lang].code;
+        window.speechSynthesis.speak(msg);
+    }
+
+    function nextQuizQuestion() {
+        setupQuiz();
+    }
+
+    function retakeQuiz() {
+        startLesson(state.level);
+    }
+
+    function showStats() {
+        showPage('statsPage');
+    }
+
+    function goHome() {
+        showPage('homePage');
+    }
+
+    init();
+</script>
+
+</body>
+</html>
+

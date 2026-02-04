@@ -1,0 +1,1529 @@
+<!DOCTYPE html>
+<!-- saved from url=(1565)https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/cc230c909793000512fca2de2e1f0d6c/cbb4121d-1bf2-40b1-b60f-08f3457b9d62/canvas-app/index.html?AWSAccessKeyId=ASIA2F3EMEYE5AREEY3S&Signature=BewXMCSexHm8xHZZLiOwxsvluXg%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEHAaCXVzLWVhc3QtMSJHMEUCIQDj%2F1ObBz0QKRIpPcJjPXbkYp5CrbvbPZyOrkEEPQsn5AIgGxCS%2FzbF0DCzaHbj7rNobTi%2Fg1uoHNSNdW4K9t3u%2BxYq8wQIORABGgw2OTk3NTMzMDk3MDUiDHMSze7t18gpxs7VECrQBCM%2BU7RyvGZPIJG5H%2FUKr7CZv9SMjRtgN%2BCFFtdWzoNw7VLd6U9ofojDqbJlG7hYyxaB9m1u5UVhv2BREb%2BQphJbdR15V6lW1xLBDL1uKfgvln2vN71S8AtGZkMjpnoAWsPj2efcyiHzSKVVjj5SkGHL2F7Bft639VZekGSVH3GgBi90ou80iTrs5uv8QjSQUYfpC2Aa0yJjeXmFtoppaKrqLN4kDgiU77vhNVnkTrHmEmZCkL3Q69ZOu23kO7J9RH5j0mpEQxdDmlr4qZQYFR7chCnuCpjup5KF%2FHUuKL6OC7w7RyEGHCJFuaf7DJHpHWKrnXVYwqGSO%2Bm7qOq8qu64IV5DO%2BYTi5qCXDJQeA84QFNWS5pLlncLwjR6lD4YaugkVC3Ur2TPr0mDS5OTuHcXElo0C9rXSMO%2FYWWmI%2FA1DuyQjytnnHVvteLjyqrNgAG%2BcNerlPCQPylrkjQpDpI5xvYsjTqTtsnoYSLdghCDV5%2FVXrImR4a2IZUwyWPIzq%2BY8mPZxGP38a5piDBmM1EvCBV44hF1Vzux9lDempFb0aJ9LH%2BYSTKvgrAoJTu3DTOMjqUY7fWc1YokYzhXkpSZLSjVoFlONM0IjQcuCZvSeDxCQTB9wn68SkJ%2FqqIDDH%2FW%2FWJe7KSOu4ZMmu5PDvJzXZXupBRsOdvaix2XqawBcjkM3e3YnJgws0ySbbrIerb3s96KrEk8Y44Kxwmx6VNOhgqvADdMpIFCAg%2BCJshuwGFeV7fOPj2DCBxi%2F4nY6MdacESbhVmj4qstAYTOwZEw7K7cywY6mAHWOpEXbwxRV9gNDNYQa9FEA2MQcJyHGKHokooiwu3eA%2FP9zTF5IAXrvHDwfnHIER5kBzcuwc4MTr6cjidUh0p8xWNvibOEVccsZZihMMtcvxgWUXo1H5MyqOwZ8VMIcVa5zLOdI41GzRT9P7cJvHXon9HHP5QAgXfxO9%2FGPn84JblfSAjXjSDUkfva57fcvBi%2F9Xo%2BKxUB3g%3D%3D&Expires=1769418031&rnd=1769414468560&utm_source=perplexity -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flashcard Quiz App</title>
+    <style>
+        :root {
+            --color-primary: rgba(33, 128, 141, 1);
+            --color-primary-hover: rgba(29, 116, 128, 1);
+            --color-primary-active: rgba(26, 104, 115, 1);
+            --color-surface: rgba(255, 255, 253, 1);
+            --color-background: rgba(252, 252, 249, 1);
+            --color-text: rgba(19, 52, 59, 1);
+            --color-text-secondary: rgba(98, 108, 113, 1);
+            --color-border: rgba(94, 82, 64, 0.2);
+            --color-success: rgba(33, 128, 141, 1);
+            --color-error: rgba(192, 21, 47, 1);
+            --color-warning: rgba(168, 75, 47, 1);
+            --space-8: 8px;
+            --space-12: 12px;
+            --space-16: 16px;
+            --space-20: 20px;
+            --space-24: 24px;
+            --radius-base: 8px;
+            --radius-lg: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: var(--space-20);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: var(--space-24);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--color-primary);
+            margin-bottom: var(--space-8);
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: var(--space-12);
+            margin-bottom: var(--space-24);
+            border-bottom: 2px solid var(--color-border);
+        }
+
+        .nav-tabs button {
+            padding: var(--space-12) var(--space-16);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            color: var(--color-text-secondary);
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-tabs button.active {
+            color: var(--color-primary);
+            border-bottom-color: var(--color-primary);
+        }
+
+        .nav-tabs button:hover {
+            color: var(--color-primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Flashcard Styles */
+        .flashcard-container {
+            perspective: 1000px;
+            height: 350px;
+            margin-bottom: var(--space-24);
+        }
+
+        .flashcard {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            cursor: pointer;
+        }
+
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-side {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: var(--space-24);
+            border-radius: var(--radius-lg);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .flashcard-front {
+            background: linear-gradient(135deg, var(--color-primary), rgba(33, 128, 141, 0.8));
+            color: white;
+        }
+
+        .flashcard-back {
+            background: linear-gradient(135deg, rgba(168, 75, 47, 1), rgba(168, 75, 47, 0.8));
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-text {
+            font-size: 1.5rem;
+            font-weight: 500;
+            line-height: 1.8;
+        }
+
+        .flashcard-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: var(--space-12);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Card Controls */
+        .card-controls {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-16);
+            margin-bottom: var(--space-24);
+        }
+
+        .btn {
+            padding: var(--space-12) var(--space-20);
+            border: none;
+            border-radius: var(--radius-base);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--color-primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(33, 128, 141, 0.3);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--color-primary);
+            border: 2px solid var(--color-primary);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(33, 128, 141, 0.1);
+        }
+
+        .btn-danger {
+            background: var(--color-error);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: rgba(192, 21, 47, 0.9);
+        }
+
+        .btn-success {
+            background: var(--color-success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: rgba(33, 128, 141, 0.9);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Navigation */
+        .card-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-24);
+            padding: var(--space-16);
+            background: var(--color-surface);
+            border-radius: var(--radius-base);
+        }
+
+        .card-counter {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--color-primary);
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: var(--space-16);
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: var(--space-8);
+            color: var(--color-text);
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: var(--space-12);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-base);
+            font-size: 1rem;
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(33, 128, 141, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-buttons {
+            display: flex;
+            gap: var(--space-12);
+            margin-top: var(--space-16);
+        }
+
+        /* Card List */
+        .card-list {
+            display: grid;
+            gap: var(--space-16);
+        }
+
+        .card-item {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-base);
+            padding: var(--space-16);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-item-content {
+            flex: 1;
+        }
+
+        .card-item-question {
+            font-weight: 600;
+            color: var(--color-text);
+            margin-bottom: var(--space-8);
+        }
+
+        .card-item-answer {
+            color: var(--color-text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .card-item-actions {
+            display: flex;
+            gap: var(--space-12);
+            margin-left: var(--space-16);
+        }
+
+        .card-item-actions button {
+            padding: var(--space-8) var(--space-12);
+            font-size: 0.9rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--color-surface);
+            padding: var(--space-24);
+            border-radius: var(--radius-lg);
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: var(--space-20);
+            color: var(--color-primary);
+        }
+
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-16);
+            margin-bottom: var(--space-24);
+        }
+
+        .stat-card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-base);
+            padding: var(--space-16);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: var(--space-8);
+        }
+
+        .stat-label {
+            font-size: 0.95rem;
+            color: var(--color-text-secondary);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: var(--space-24);
+            color: var(--color-text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: var(--space-16);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--color-border);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: var(--space-8);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--color-primary);
+            transition: width 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .container {
+                padding: var(--space-16);
+            }
+
+            .flashcard-side {
+                padding: var(--space-16);
+            }
+
+            .flashcard-text {
+                font-size: 1.2rem;
+            }
+
+            .card-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .card-item-actions {
+                margin-left: 0;
+                margin-top: var(--space-12);
+                width: 100%;
+            }
+
+            .card-item-actions button {
+                flex: 1;
+            }
+
+            .card-controls {
+                flex-wrap: wrap;
+            }
+
+            .nav-tabs {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 Flashcard Quiz App</h1>
+            <p style="color: var(--color-text-secondary);">Master your learning with interactive flashcards</p>
+        </header>
+
+        <div class="nav-tabs">
+            <button class="tab-button active" data-tab="study">Study</button>
+            <button class="tab-button" data-tab="manage">Manage Cards</button>
+            <button class="tab-button" data-tab="stats">Statistics</button>
+        </div>
+
+        <!-- STUDY TAB -->
+        <div id="study" class="tab-content active">
+            <div class="card-navigation">
+                <button class="btn btn-secondary" id="prevBtn" disabled="">← Previous</button>
+                <span class="card-counter"><span id="currentCard">1</span> / <span id="totalCards">51</span></span>
+                <button class="btn btn-secondary" id="nextBtn">Next →</button>
+            </div>
+
+            <div class="flashcard-container">
+                <div class="flashcard flipped" id="flashcard">
+                    <div class="flashcard-side flashcard-front">
+                        <div class="flashcard-label">Question</div>
+                        <div class="flashcard-text" id="questionText">What is the capital of France?</div>
+                    </div>
+                    <div class="flashcard-side flashcard-back">
+                        <div class="flashcard-label">Answer</div>
+                        <div class="flashcard-text" id="answerText">Paris</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-controls">
+                <button class="btn btn-primary" id="showAnswerBtn">Show Answer</button>
+                <button class="btn btn-secondary" id="resetDeckBtn">Reset Deck</button>
+            </div>
+
+            <div style="text-align: center; color: var(--color-text-secondary);">
+                <p>💡 Tip: Click the card to flip between question and answer</p>
+            </div>
+        </div>
+
+        <!-- MANAGE TAB -->
+        <div id="manage" class="tab-content">
+            <div style="margin-bottom: var(--space-24);">
+                <h2 style="margin-bottom: var(--space-16); color: var(--color-primary);">Add New Flashcard</h2>
+                <div class="form-group">
+                    <label for="newQuestion">Question:</label>
+                    <textarea id="newQuestion" placeholder="Enter the question..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="newAnswer">Answer:</label>
+                    <textarea id="newAnswer" placeholder="Enter the answer..."></textarea>
+                </div>
+                <div class="form-buttons">
+                    <button class="btn btn-success" id="addCardBtn">➕ Add Card</button>
+                    <button class="btn btn-secondary" id="clearFormBtn">Clear</button>
+                </div>
+            </div>
+
+            <hr style="margin: var(--space-24) 0; border: none; border-top: 1px solid var(--color-border);">
+
+            <h2 style="margin-bottom: var(--space-16); color: var(--color-primary);">Your Flashcards</h2>
+            <div id="cardsList" class="card-list">
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: What is the capital of France?</div>
+                        <div class="card-item-answer">A: Paris</div>
+                        <div style="margin-top: var(--space-8); font-size: 0.85rem; color: var(--color-success);">✓ Reviewed</div>
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(0)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(0)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: Who wrote 'Romeo and Juliet'?</div>
+                        <div class="card-item-answer">A: William Shakespeare</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(1)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(1)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: What is the smallest prime number?</div>
+                        <div class="card-item-answer">A: 2</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(2)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(2)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: What is the formula for the area of a circle?</div>
+                        <div class="card-item-answer">A: A = πr²</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(3)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(3)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: What is the chemical symbol for gold?</div>
+                        <div class="card-item-answer">A: Au</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(4)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(4)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: In which year did World War II end?</div>
+                        <div class="card-item-answer">A: 1945</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(5)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(5)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: What is the longest river in the world?</div>
+                        <div class="card-item-answer">A: The Nile River</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(6)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(6)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: What is the capital of Japan?</div>
+                        <div class="card-item-answer">A: Tokyo</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(7)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(7)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: Who painted the Mona Lisa?</div>
+                        <div class="card-item-answer">A: Leonardo da Vinci</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(8)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(8)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: What is the speed of light?</div>
+                        <div class="card-item-answer">A: 299,792,458 meters per second</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(9)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(9)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: What is the main ingredient in guacamole?</div>
+                        <div class="card-item-answer">A: Avocado</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(10)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(10)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: Who discovered America in 1492?</div>
+                        <div class="card-item-answer">A: Christopher Columbus</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(11)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(11)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: What is the largest planet in our solar system?</div>
+                        <div class="card-item-answer">A: Jupiter</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(12)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(12)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: What is the freezing point of water in Celsius?</div>
+                        <div class="card-item-answer">A: 0°C</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(13)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(13)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: Who is known as the father of computers?</div>
+                        <div class="card-item-answer">A: Charles Babbage</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(14)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(14)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: What is the smallest bone in the human body?</div>
+                        <div class="card-item-answer">A: Stapes (in the ear)</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(15)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(15)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: What is the capital of Germany?</div>
+                        <div class="card-item-answer">A: Berlin</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(16)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(16)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: How many strings does a standard violin have?</div>
+                        <div class="card-item-answer">A: 4 strings</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(17)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(17)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: What is the most spoken language in the world?</div>
+                        <div class="card-item-answer">A: Mandarin Chinese</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(18)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(18)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: Who invented the telephone?</div>
+                        <div class="card-item-answer">A: Alexander Graham Bell</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(19)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(19)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: What is the capital of India?</div>
+                        <div class="card-item-answer">A: New Delhi</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(20)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(20)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: How many continents are there?</div>
+                        <div class="card-item-answer">A: 7 continents</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(21)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(21)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: What is the chemical formula for water?</div>
+                        <div class="card-item-answer">A: H₂O</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(22)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(22)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: Who was the first President of the United States?</div>
+                        <div class="card-item-answer">A: George Washington</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(23)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(23)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: What is the largest mammal in the world?</div>
+                        <div class="card-item-answer">A: Blue Whale</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(24)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(24)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: What year did the Titanic sink?</div>
+                        <div class="card-item-answer">A: 1912</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(25)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(25)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: What is the capital of Australia?</div>
+                        <div class="card-item-answer">A: Canberra</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(26)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(26)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: How many sides does a hexagon have?</div>
+                        <div class="card-item-answer">A: 6 sides</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(27)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(27)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: What is the boiling point of water in Celsius?</div>
+                        <div class="card-item-answer">A: 100°C</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(28)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(28)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: Who wrote 'To Kill a Mockingbird'?</div>
+                        <div class="card-item-answer">A: Harper Lee</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(29)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(29)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: What is the capital of Brazil?</div>
+                        <div class="card-item-answer">A: Brasília</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(30)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(30)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: What is the largest ocean on Earth?</div>
+                        <div class="card-item-answer">A: Pacific Ocean</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(31)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(31)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: How many bones are in the human body?</div>
+                        <div class="card-item-answer">A: 206 bones</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(32)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(32)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: What is the symbol for the chemical element Iron?</div>
+                        <div class="card-item-answer">A: Fe</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(33)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(33)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: Who invented the light bulb?</div>
+                        <div class="card-item-answer">A: Thomas Edison</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(34)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(34)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: What is the currency of Japan?</div>
+                        <div class="card-item-answer">A: Japanese Yen</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(35)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(35)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: How many planets are in our solar system?</div>
+                        <div class="card-item-answer">A: 8 planets</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(36)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(36)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: What is the capital of Canada?</div>
+                        <div class="card-item-answer">A: Ottawa</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(37)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(37)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: Who wrote '1984'?</div>
+                        <div class="card-item-answer">A: George Orwell</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(38)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(38)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: What is the largest desert in the world?</div>
+                        <div class="card-item-answer">A: Antarctic Desert</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(39)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(39)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: How many strings does a guitar typically have?</div>
+                        <div class="card-item-answer">A: 6 strings</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(40)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(40)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: What is the capital of Spain?</div>
+                        <div class="card-item-answer">A: Madrid</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(41)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(41)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: What is the SI unit of temperature?</div>
+                        <div class="card-item-answer">A: Kelvin (K)</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(42)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(42)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: Who was the first woman in space?</div>
+                        <div class="card-item-answer">A: Valentina Tereshkova</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(43)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(43)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: What is the largest island in the world?</div>
+                        <div class="card-item-answer">A: Greenland</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(44)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(44)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: What is the capital of Italy?</div>
+                        <div class="card-item-answer">A: Rome</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(45)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(45)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: How many sides does an octagon have?</div>
+                        <div class="card-item-answer">A: 8 sides</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(46)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(46)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: What is the second planet from the sun?</div>
+                        <div class="card-item-answer">A: Venus</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(47)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(47)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: Who invented the computer mouse?</div>
+                        <div class="card-item-answer">A: Douglas Engelbart</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(48)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(48)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: What is the capital of Mexico?</div>
+                        <div class="card-item-answer">A: Mexico City</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(49)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(49)">🗑️ Delete</button>
+                    </div>
+                </div>
+            
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: How many keys does a piano have?</div>
+                        <div class="card-item-answer">A: 88 keys</div>
+                        
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(50)">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(50)">🗑️ Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STATISTICS TAB -->
+        <div id="stats" class="tab-content">
+            <h2 style="margin-bottom: var(--space-24); color: var(--color-primary);">Learning Statistics</h2>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalCardsStats">51</div>
+                    <div class="stat-label">Total Cards</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="masteredCards">0</div>
+                    <div class="stat-label">Mastered</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="reviewedCards">1</div>
+                    <div class="stat-label">Reviewed</div>
+                </div>
+            </div>
+
+            <div style="margin-top: var(--space-24);">
+                <h3 style="margin-bottom: var(--space-16); color: var(--color-text);">Card Mastery Progress</h3>
+                <div id="masteryDetails">
+                    <div style="margin-bottom: var(--space-16);">
+                        <div style="margin-bottom: var(--space-8); display: flex; justify-content: space-between;">
+                            <span>Cards Reviewed</span>
+                            <span>2%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 2%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div style="margin-bottom: var(--space-8); display: flex; justify-content: space-between;">
+                            <span>Cards Mastered</span>
+                            <span>0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: var(--space-24);">
+                <button class="btn btn-danger" id="resetStatsBtn" style="width: 100%; max-width: 300px;">🔄 Reset All Data</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- EDIT MODAL -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">Edit Flashcard</div>
+            <div class="form-group">
+                <label for="editQuestion">Question:</label>
+                <textarea id="editQuestion"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="editAnswer">Answer:</label>
+                <textarea id="editAnswer"></textarea>
+            </div>
+            <div class="form-buttons">
+                <button class="btn btn-success" id="saveEditBtn">Save Changes</button>
+                <button class="btn btn-secondary" id="cancelEditBtn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Default 50 flashcards with computer science topics
+        const DEFAULT_CARDS = [
+            { q: "What does CPU stand for?", a: "Central Processing Unit" },
+            { q: "What is the time complexity of binary search?", a: "O(log n)" },
+            { q: "What is a data structure that follows LIFO?", a: "Stack" },
+            { q: "What does HTML stand for?", a: "HyperText Markup Language" },
+            { q: "What is the purpose of an operating system?", a: "To manage computer hardware and software resources" },
+            { q: "What is a primary key in a database?", a: "A unique identifier for each record in a table" },
+            { q: "What does SQL stand for?", a: "Structured Query Language" },
+            { q: "What is the difference between HTTP and HTTPS?", a: "HTTPS is the secure version of HTTP using SSL/TLS" },
+            { q: "What is recursion in programming?", a: "A function that calls itself" },
+            { q: "What is the Big O notation for the worst-case time complexity of quicksort?", a: "O(n²)" },
+            { q: "What is a linked list?", a: "A linear data structure where elements are stored in nodes connected by pointers" },
+            { q: "What does API stand for?", a: "Application Programming Interface" },
+            { q: "What is the purpose of version control systems like Git?", a: "To track changes in source code and collaborate on projects" },
+            { q: "What is encapsulation in object-oriented programming?", a: "The bundling of data and methods that operate on that data" },
+            { q: "What is the difference between a compiler and an interpreter?", a: "Compiler translates entire code at once, interpreter translates line by line" },
+            { q: "What is a database index?", a: "A data structure that improves the speed of data retrieval operations" },
+            { q: "What does TCP/IP stand for?", a: "Transmission Control Protocol/Internet Protocol" },
+            { q: "What is the purpose of the 'this' keyword in JavaScript?", a: "To refer to the current object in a method" },
+            { q: "What is a hash table?", a: "A data structure that maps keys to values using a hash function" },
+            { q: "What is machine learning?", a: "A subset of AI that enables systems to learn and improve from experience" },
+            { q: "What is the difference between supervised and unsupervised learning?", a: "Supervised uses labeled data, unsupervised uses unlabeled data" },
+            { q: "What is a neural network?", a: "A computing system inspired by biological neural networks" },
+            { q: "What does CSS stand for?", a: "Cascading Style Sheets" },
+            { q: "What is the purpose of the 'finally' block in try-catch?", a: "Code that executes regardless of whether an exception occurs" },
+            { q: "What is polymorphism in OOP?", a: "The ability of objects to take on multiple forms" },
+            { q: "What is the difference between a process and a thread?", a: "A process is an instance of a program, a thread is a unit of execution within a process" },
+            { q: "What is the purpose of the 'git clone' command?", a: "To create a copy of a repository" },
+            { q: "What is a RESTful API?", a: "An API that follows REST architectural principles" },
+            { q: "What is the time complexity of inserting into a hash table?", a: "O(1) average case" },
+            { q: "What is a binary tree?", a: "A tree data structure where each node has at most two children" },
+            { q: "What does IDE stand for?", a: "Integrated Development Environment" },
+            { q: "What is the purpose of the 'public' access modifier?", a: "To make class members accessible from anywhere" },
+            { q: "What is a deadlock in operating systems?", a: "A situation where processes are waiting for resources held by each other" },
+            { q: "What is the difference between a stack and a queue?", a: "Stack is LIFO, queue is FIFO" },
+            { q: "What is the purpose of the 'npm' command?", a: "Node Package Manager for JavaScript" },
+            { q: "What is a foreign key in a database?", a: "A field that refers to the primary key of another table" },
+            { q: "What is the purpose of the 'break' statement in loops?", a: "To exit the loop prematurely" },
+            { q: "What is a cookie in web development?", a: "A small piece of data stored on the user's computer by the web browser" },
+            { q: "What is the difference between GET and POST HTTP methods?", a: "GET retrieves data, POST submits data to be processed" },
+            { q: "What is a constructor in object-oriented programming?", a: "A special method called when an object is instantiated" },
+            { q: "What is the purpose of the 'virtual' keyword in C++?", a: "To enable runtime polymorphism through method overriding" },
+            { q: "What is a binary search tree?", a: "A binary tree where left child < parent < right child" },
+            { q: "What does DNS stand for?", a: "Domain Name System" },
+            { q: "What is the purpose of the 'async' keyword in JavaScript?", a: "To define asynchronous functions" },
+            { q: "What is a graph data structure?", a: "A collection of nodes connected by edges" },
+            { q: "What is the difference between a class and an object?", a: "A class is a blueprint, an object is an instance of a class" },
+            { q: "What is the purpose of the 'git merge' command?", a: "To combine changes from different branches" },
+            { q: "What is a firewall in network security?", a: "A system that monitors and controls incoming and outgoing network traffic" },
+            { q: "What is the time complexity of bubble sort?", a: "O(n²)" },
+            { q: "What does ORM stand for?", a: "Object-Relational Mapping" }
+        ];
+
+        // State
+        let cards = [];
+        let currentIndex = 0;
+        let isFlipped = false;
+        let editingIndex = null;
+
+        // Initialize
+        function init() {
+            loadCards();
+            setupEventListeners();
+            displayCard();
+            renderCardsList();
+            updateStats();
+        }
+
+        function loadCards() {
+            // Clear old data to force loading new computer science questions
+            localStorage.removeItem('flashcards');
+            const stored = localStorage.getItem('flashcards');
+            if (stored) {
+                cards = JSON.parse(stored);
+            } else {
+                cards = DEFAULT_CARDS.map(card => ({
+                    question: card.q,
+                    answer: card.a,
+                    reviewed: false,
+                    mastered: false
+                }));
+                saveCards();
+            }
+        }
+
+        function saveCards() {
+            localStorage.setItem('flashcards', JSON.stringify(cards));
+            updateStats();
+        }
+
+        function setupEventListeners() {
+            // Tab switching
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    e.target.classList.add('active');
+                    document.getElementById(e.target.dataset.tab).classList.add('active');
+                });
+            });
+
+            // Flashcard flip
+            document.getElementById('flashcard').addEventListener('click', toggleFlip);
+            document.getElementById('showAnswerBtn').addEventListener('click', toggleFlip);
+
+            // Navigation
+            document.getElementById('prevBtn').addEventListener('click', previousCard);
+            document.getElementById('nextBtn').addEventListener('click', nextCard);
+            document.getElementById('resetDeckBtn').addEventListener('click', resetDeck);
+
+            // Add card
+            document.getElementById('addCardBtn').addEventListener('click', addCard);
+            document.getElementById('clearFormBtn').addEventListener('click', () => {
+                document.getElementById('newQuestion').value = '';
+                document.getElementById('newAnswer').value = '';
+            });
+
+            // Edit modal
+            document.getElementById('saveEditBtn').addEventListener('click', saveEdit);
+            document.getElementById('cancelEditBtn').addEventListener('click', closeEditModal);
+
+            // Stats
+            document.getElementById('resetStatsBtn').addEventListener('click', resetAllData);
+        }
+
+        function displayCard() {
+            if (cards.length === 0) {
+                document.getElementById('questionText').textContent = 'No flashcards yet. Add some to get started!';
+                document.getElementById('answerText').textContent = 'Create new cards in the Manage Cards tab';
+                document.getElementById('currentCard').textContent = '0';
+                document.getElementById('totalCards').textContent = '0';
+                document.getElementById('prevBtn').disabled = true;
+                document.getElementById('nextBtn').disabled = true;
+                return;
+            }
+
+            const card = cards[currentIndex];
+            document.getElementById('questionText').textContent = card.question;
+            document.getElementById('answerText').textContent = card.answer;
+            document.getElementById('currentCard').textContent = currentIndex + 1;
+            document.getElementById('totalCards').textContent = cards.length;
+            document.getElementById('prevBtn').disabled = currentIndex === 0;
+            document.getElementById('nextBtn').disabled = currentIndex === cards.length - 1;
+            isFlipped = false;
+            document.getElementById('flashcard').classList.remove('flipped');
+
+            // Mark as reviewed
+            if (!card.reviewed) {
+                cards[currentIndex].reviewed = true;
+                saveCards();
+            }
+        }
+
+        function toggleFlip() {
+            isFlipped = !isFlipped;
+            document.getElementById('flashcard').classList.toggle('flipped');
+        }
+
+        function nextCard() {
+            if (currentIndex < cards.length - 1) {
+                currentIndex++;
+                displayCard();
+            }
+        }
+
+        function previousCard() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                displayCard();
+            }
+        }
+
+        function resetDeck() {
+            currentIndex = 0;
+            isFlipped = false;
+            displayCard();
+        }
+
+        function addCard() {
+            const question = document.getElementById('newQuestion').value.trim();
+            const answer = document.getElementById('newAnswer').value.trim();
+
+            if (!question || !answer) {
+                alert('Please fill in both question and answer!');
+                return;
+            }
+
+            cards.push({
+                question,
+                answer,
+                reviewed: false,
+                mastered: false
+            });
+
+            saveCards();
+            document.getElementById('newQuestion').value = '';
+            document.getElementById('newAnswer').value = '';
+            renderCardsList();
+            updateStats();
+            alert('Card added successfully!');
+        }
+
+        function renderCardsList() {
+            const list = document.getElementById('cardsList');
+            if (cards.length === 0) {
+                list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📝</div><p>No flashcards yet. Add your first card above!</p></div>';
+                return;
+            }
+
+            list.innerHTML = cards.map((card, idx) => `
+                <div class="card-item">
+                    <div class="card-item-content">
+                        <div class="card-item-question">Q: ${card.question}</div>
+                        <div class="card-item-answer">A: ${card.answer}</div>
+                        ${card.reviewed ? '<div style="margin-top: var(--space-8); font-size: 0.85rem; color: var(--color-success);">✓ Reviewed</div>' : ''}
+                    </div>
+                    <div class="card-item-actions">
+                        <button class="btn btn-secondary" onclick="editCard(${idx})">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteCard(${idx})">🗑️ Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function editCard(idx) {
+            editingIndex = idx;
+            document.getElementById('editQuestion').value = cards[idx].question;
+            document.getElementById('editAnswer').value = cards[idx].answer;
+            document.getElementById('editModal').classList.add('active');
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').classList.remove('active');
+            editingIndex = null;
+        }
+
+        function saveEdit() {
+            const question = document.getElementById('editQuestion').value.trim();
+            const answer = document.getElementById('editAnswer').value.trim();
+
+            if (!question || !answer) {
+                alert('Please fill in both fields!');
+                return;
+            }
+
+            cards[editingIndex].question = question;
+            cards[editingIndex].answer = answer;
+            saveCards();
+            renderCardsList();
+            closeEditModal();
+            displayCard();
+            alert('Card updated successfully!');
+        }
+
+        function deleteCard(idx) {
+            if (confirm('Are you sure you want to delete this card?')) {
+                cards.splice(idx, 1);
+                if (currentIndex >= cards.length && currentIndex > 0) {
+                    currentIndex--;
+                }
+                saveCards();
+                renderCardsList();
+                displayCard();
+                updateStats();
+            }
+        }
+
+        function updateStats() {
+            const total = cards.length;
+            const reviewed = cards.filter(c => c.reviewed).length;
+            const mastered = cards.filter(c => c.mastered).length;
+
+            document.getElementById('totalCardsStats').textContent = total;
+            document.getElementById('reviewedCards').textContent = reviewed;
+            document.getElementById('masteredCards').textContent = mastered;
+
+            const masteryDetails = document.getElementById('masteryDetails');
+            if (total === 0) {
+                masteryDetails.innerHTML = '<div class="empty-state"><p>No cards to track yet.</p></div>';
+            } else {
+                const reviewPercent = Math.round((reviewed / total) * 100);
+                const masteryPercent = Math.round((mastered / total) * 100);
+                masteryDetails.innerHTML = `
+                    <div style="margin-bottom: var(--space-16);">
+                        <div style="margin-bottom: var(--space-8); display: flex; justify-content: space-between;">
+                            <span>Cards Reviewed</span>
+                            <span>${reviewPercent}%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${reviewPercent}%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div style="margin-bottom: var(--space-8); display: flex; justify-content: space-between;">
+                            <span>Cards Mastered</span>
+                            <span>${masteryPercent}%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${masteryPercent}%"></div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function resetAllData() {
+            if (confirm('This will delete ALL flashcards and reset statistics. This cannot be undone. Are you sure?')) {
+                if (confirm('Are you absolutely sure?')) {
+                    localStorage.removeItem('flashcards');
+                    cards = DEFAULT_CARDS.map(card => ({
+                        question: card.q,
+                        answer: card.a,
+                        reviewed: false,
+                        mastered: false
+                    }));
+                    currentIndex = 0;
+                    isFlipped = false;
+                    saveCards();
+                    renderCardsList();
+                    displayCard();
+                    updateStats();
+                    alert('All data has been reset to default!');
+                }
+            }
+        }
+
+        // Start the app
+        init();
+    </script>
+
+
+</body></html>

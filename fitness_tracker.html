@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness Pro App</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #333; min-height: 100vh; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        nav { display: flex; justify-content: space-around; background: rgba(255,255,255,0.9); padding: 10px; border-radius: 10px; margin-bottom: 20px; }
+        nav button { background: #ff416c; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+        nav button.active { background: #4CAF50; }
+        section { display: none; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        section.active { display: block; }
+        form { display: grid; gap: 10px; }
+        input, select, button { padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
+        button { background: #ff416c; color: white; border: none; cursor: pointer; }
+        .workout-list, .schedule, .progress { display: grid; gap: 10px; }
+        .exercise { background: #f9f9f9; padding: 15px; border-radius: 5px; }
+        .timer { font-size: 2em; text-align: center; margin: 20px 0; }
+        canvas { max-width: 100%; height: 200px; }
+        .meal { background: #e8f5e8; padding: 10px; border-radius: 5px; margin: 5px 0; }
+        @media (max-width: 600px) { .container { padding: 10px; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏋️ Fitness Pro App</h1>
+        <nav>
+            <button onclick="switchTab('profile')" class="active">Profile</button>
+            <button onclick="switchTab('workout')">Workouts</button>
+            <button onclick="switchTab('nutrition')">Nutrition</button>
+            <button onclick="switchTab('schedule')">Schedule</button>
+            <button onclick="switchTab('progress')">Progress</button>
+            <button onclick="switchTab('calculators')">Calculators</button>
+        </nav>
+
+        <section id="profile" class="active">
+            <h2>👤 User Profile</h2>
+            <form id="profileForm">
+                <input type="number" id="age" placeholder="Age" required>
+                <select id="gender" required><option>Gender</option><option>Male</option><option>Female</option></select>
+                <input type="number" id="height" placeholder="Height (cm)" required>
+                <input type="number" id="weight" placeholder="Weight (kg)" required>
+                <select id="goal" required>
+                    <option>Fitness Goal</option>
+                    <option>Fat Loss</option>
+                    <option>Muscle Gain</option>
+                    <option>Stamina</option>
+                </select>
+                <select id="dietPref" required>
+                    <option>Diet Preference</option>
+                    <option>Veg</option>
+                    <option>Non-Veg</option>
+                    <option>Vegan</option>
+                </select>
+                <input type="text" id="healthLimits" placeholder="Health Limits (e.g., knee pain)">
+                <button type="submit">Save Profile</button>
+            </form>
+            <p id="profileSummary"></p>
+        </section>
+
+        <section id="workout">
+            <h2>🏋️ Workout System</h2>
+            <div id="exerciseList" class="workout-list"></div>
+            <div id="timer" class="timer" style="display:none;">00:00</div>
+            <button id="finishTimer" style="display:none;">Finish Exercise</button>
+        </section>
+
+        <section id="nutrition">
+            <h2>🍽️ Nutrition Plan</h2>
+            <div id="mealPlan" class="schedule"></div>
+            <p>Water: <span id="waterIntake">3L</span> today</p>
+        </section>
+
+        <section id="schedule">
+            <h2>📅 Weekly Schedule</h2>
+            <div id="weeklySchedule" class="schedule"></div>
+        </section>
+
+        <section id="progress">
+            <h2>📊 Progress Tracking</h2>
+            <p>Workouts Completed: <span id="workoutsDone">0</span></p>
+            <p>Total Time: <span id="totalTime">0</span> min | Calories: <span id="caloriesBurned">0</span></p>
+            <p>Weight Change: <span id="weightChange">0</span> kg</p>
+            <canvas id="weightChart" width="400" height="200"></canvas>
+            <canvas id="streakChart" width="400" height="200"></canvas>
+        </section>
+
+        <section id="calculators">
+            <h2>🧮 Fitness Calculators</h2>
+            <input type="number" id="calcWeight" placeholder="Weight (kg)">
+            <input type="number" id="calcHeight" placeholder="Height (cm)">
+            <button onclick="calculateBMI()">BMI</button>
+            <p id="bmiResult"></p>
+            <button onclick="calculateBMR()">BMR</button>
+            <p id="bmrResult"></p>
+        </section>
+    </div>
+
+    <script>
+        let userProfile = JSON.parse(localStorage.getItem('profile')) || {};
+        let currentExercise = {};
+        let timerInterval;
+        let workoutsDone = parseInt(localStorage.getItem('workoutsDone')) || 0;
+        let totalTime = parseInt(localStorage.getItem('totalTime')) || 0;
+        let caloriesBurned = parseInt(localStorage.getItem('caloriesBurned')) || 0;
+        let weights = JSON.parse(localStorage.getItem('weights')) || [];
+        let audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAo'); // Beep sound
+
+        // Switch tabs
+        function switchTab(tab) {
+            document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById(tab).classList.add('active');
+            if (tab === 'workout' && userProfile.goal) loadWorkouts();
+            if (tab === 'nutrition' && userProfile.goal) loadNutrition();
+            if (tab === 'schedule' && userProfile.goal) loadSchedule();
+            if (tab === 'progress') updateProgressDisplay();
+        }
+
+        // Profile save
+        document.getElementById('profileForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            userProfile = {
+                age: document.getElementById('age').value,
+                gender: document.getElementById('gender').value,
+                height: document.getElementById('height').value,
+                weight: document.getElementById('weight').value,
+                goal: document.getElementById('goal').value,
+                dietPref: document.getElementById('dietPref').value,
+                healthLimits: document.getElementById('healthLimits').value
+            };
+            localStorage.setItem('profile', JSON.stringify(userProfile));
+            document.getElementById('profileSummary').innerHTML = `Profile saved! Goal: ${userProfile.goal}, Weight: ${userProfile.weight}kg [web:10]`;
+            setTimeout(() => switchTab('workout'), 1000);
+        });
+
+        // Workouts data by goal [web:7][web:13]
+        const workouts = {
+            'Fat Loss': [{name: 'Burpees', sets: 3, reps: 15, time: 30, difficulty: 'Medium', rest: 60, calories: 10},
+                         {name: 'Jumping Jacks', sets: 3, reps: 20, time: 45, difficulty: 'Easy', rest: 45, calories: 8}],
+            'Muscle Gain': [{name: 'Pushups', sets: 4, reps: 12, time: 0, difficulty: 'Hard', rest: 90, calories: 12},
+                            {name: 'Squats', sets: 4, reps: 15, time: 0, difficulty: 'Medium', rest: 75, calories: 15}],
+            'Stamina': [{name: 'Mountain Climbers', sets: 3, reps: 30, time: 60, difficulty: 'Hard', rest: 60, calories: 12},
+                        {name: 'Running in Place', sets: 3, reps: 0, time: 120, difficulty: 'Medium', rest: 60, calories: 20}]
+        };
+
+        function loadWorkouts() {
+            const list = document.getElementById('exerciseList');
+            list.innerHTML = '';
+            workouts[userProfile.goal || 'Fat Loss'].forEach(ex => {
+                const div = document.createElement('div');
+                div.className = 'exercise';
+                div.innerHTML = `
+                    <h3>${ex.name} (${ex.difficulty})</h3>
+                    <p>Sets: ${ex.sets} | Reps: ${ex.reps || 'N/A'} | Time: ${ex.time}s | Rest: ${ex.rest}s</p>
+                    <button onclick="startExercise('${ex.name}', ${ex.time || 30}, ${ex.calories})">Start</button>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        function startExercise(name, duration, cals) {
+            currentExercise = {name, duration, cals, startTime: Date.now()};
+            document.getElementById('timer').style.display = 'block';
+            document.getElementById('finishTimer').style.display = 'inline';
+            startTimer();
+        }
+
+        function startTimer() {
+            let time = 0;
+            timerInterval = setInterval(() => {
+                let mins = Math.floor(time / 60);
+                let secs = time % 60;
+                document.getElementById('timer').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+                time++;
+            }, 1000);
+        }
+
+        document.getElementById('finishTimer').onclick = () => {
+            clearInterval(timerInterval);
+            let elapsedTime = Math.floor((Date.now() - currentExercise.startTime) / 1000);
+            totalTime += elapsedTime / 60;
+            caloriesBurned += currentExercise.cals;
+            localStorage.setItem('totalTime', totalTime);
+            localStorage.setItem('caloriesBurned', caloriesBurned);
+            workoutsDone++;
+            localStorage.setItem('workoutsDone', workoutsDone);
+            document.getElementById('timer').style.display = 'none';
+            document.getElementById('finishTimer').style.display = 'none';
+            audio.play();
+        };
+
+        // Nutrition by goal and diet [web:14]
+        function loadNutrition() {
+            const plan = document.getElementById('mealPlan');
+            const meals = {
+                'Fat Loss': {breakfast: 'Oats with fruits', lunch: 'Grilled veggies', dinner: 'Salad'},
+                'Muscle Gain': {breakfast: 'Eggs & protein shake', lunch: 'Chicken rice', dinner: 'Salmon'},
+                'Stamina': {breakfast: 'Banana smoothie', lunch: 'Quinoa bowl', dinner: 'Lentil soup'}
+            };
+            const baseMeals = meals[userProfile.goal || 'Fat Loss'];
+            Object.keys(baseMeals).forEach(time => {
+                let meal = baseMeals[time];
+                if (userProfile.dietPref === 'Veg') meal = meal.replace('Chicken', 'Paneer').replace('Eggs', 'Tofu').replace('Salmon', 'Tofu');
+                if (userProfile.dietPref === 'Vegan') meal = meal.replace('Eggs', 'Tofu').replace('Paneer', 'Tofu').replace('Salmon', 'Tofu');
+                const div = document.createElement('div');
+                div.className = 'meal';
+                div.innerHTML = `<strong>${time}:</strong> ${meal} (Timing: ${['8AM', '1PM', '7PM'][Object.keys(baseMeals).indexOf(time)]})`;
+                plan.appendChild(div);
+            });
+            document.getElementById('waterIntake').textContent = ((userProfile.weight * 0.03) || 3).toFixed(1) + 'L';
+        }
+
+        // Schedule [web:3]
+        function loadSchedule() {
+            const days = ['Mon: Full Body (45min)', 'Tue: Cardio (30min)', 'Wed: Rest', 'Thu: Strength (50min)', 'Fri: Core (40min)', 'Sat: HIIT (35min)', 'Sun: Rest'];
+            const sched = document.getElementById('weeklySchedule');
+            sched.innerHTML = '';
+            days.forEach(day => {
+                const div = document.createElement('div');
+                div.textContent = day;
+                sched.appendChild(div);
+            });
+        }
+
+        // Progress [web:13]
+        function updateProgressDisplay() {
+            document.getElementById('workoutsDone').textContent = workoutsDone;
+            document.getElementById('totalTime').textContent = totalTime.toFixed(0);
+            document.getElementById('caloriesBurned').textContent = caloriesBurned;
+            if (userProfile.weight) {
+                weights.push(parseFloat(userProfile.weight));
+                if (weights.length > 10) weights.shift();
+                localStorage.setItem('weights', JSON.stringify(weights));
+                const latestWeight = weights[weights.length - 1];
+                const firstWeight = weights[0];
+                document.getElementById('weightChange').textContent = (latestWeight - firstWeight).toFixed(1);
+            }
+            drawCharts();
+        }
+
+        function drawCharts() {
+            // Weight chart
+            const ctx1 = document.getElementById('weightChart').getContext('2d');
+            ctx1.clearRect(0, 0, 400, 200);
+            ctx1.beginPath();
+            ctx1.moveTo(0, 150);
+            weights.forEach((w, i) => ctx1.lineTo(i * 40, 150 - (w - Math.min(...weights)) * 10));
+            ctx1.strokeStyle = '#4CAF50';
+            ctx1.stroke();
+
+            // Streak (simple bar)
+            const ctx2 = document.getElementById('streakChart').getContext('2d');
+            ctx2.clearRect(0, 0, 400, 200);
+            ctx2.fillStyle = '#ff416c';
+            ctx2.fillRect(50, 150 - workoutsDone * 5, 300, workoutsDone * 5);
+        }
+
+        // Calculators [page:1][web:9][web:10]
+        function calculateBMI() {
+            const weight = parseFloat(document.getElementById('calcWeight').value);
+            const height = parseFloat(document.getElementById('calcHeight').value) / 100;
+            const bmi = (weight / (height * height)).toFixed(1);
+            document.getElementById('bmiResult').textContent = `BMI: ${bmi}`;
+        }
+
+        function calculateBMR() {
+            const age = userProfile.age || 25;
+            const weight = parseFloat(document.getElementById('calcWeight').value || userProfile.weight);
+            const height = parseFloat(document.getElementById('calcHeight').value || userProfile.height);
+            let bmr = userProfile.gender === 'Male' ? 10 * weight + 6.25 * height - 5 * age + 5 : 10 * weight + 6.25 * height - 5 * age - 161;
+            document.getElementById('bmrResult').textContent = `BMR: ${bmr.toFixed(0)} kcal/day`;
+        }
+
+        // Reminders (setInterval for demo)
+        setInterval(() => {
+            if (Math.random() < 0.1) alert('🔔 Workout time! Drink water too!');
+        }, 30000);
+
+        // Init
+        if (Object.keys(userProfile).length) {
+            document.getElementById('profileSummary').innerHTML = `Loaded: ${userProfile.goal}`;
+            switchTab('workout');
+        }
+        updateProgressDisplay();
+    </script>
+</body>
+</html>
